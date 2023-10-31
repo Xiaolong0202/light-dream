@@ -29,8 +29,8 @@ public class UserController {
      */
     @PostMapping("/login")
     public CommonResp<?> login(@RequestBody User user){
-        userService.login(user);
-        return CommonResp.buildSuccess("登录成功");
+        Integer userType = userService.login(user);
+        return CommonResp.buildSuccess(userType,"登录成功");
     }
 
     @PostMapping("/register")

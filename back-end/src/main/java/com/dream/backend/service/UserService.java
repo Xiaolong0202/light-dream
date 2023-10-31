@@ -9,7 +9,7 @@ import com.dream.backend.domain.User;
 */
 public interface UserService {
 
-    void login(User user);
+    Integer login(User user);
 
     void register(User user);
 }

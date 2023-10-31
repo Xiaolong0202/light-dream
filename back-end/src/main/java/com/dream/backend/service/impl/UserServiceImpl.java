@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
     UserMapper userMapper;
 
     @Override
-    public void login(User user) {
+    public Integer login(User user) {
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getPhone,user.getPhone());
         userLambdaQueryWrapper.eq(User::getPassword,user.getPassword());
@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService{
         if (userDB == null){
             throw new BusinessException("账号或密码不对");
         }
+        return userDB.getUserType();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService{
         userLambdaQueryWrapper.eq(User::getPhone,user.getPhone());
         User userDB = userMapper.selectOne(userLambdaQueryWrapper);
         if (userDB!=null){
-            throw new BusinessException("用户已经存在");
+            throw new BusinessException("该手机号已经被注册");
         }
         user.setId(IdUtil.getSnowflakeNextId());
         userMapper.insert(user);
