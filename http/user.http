@@ -1,0 +1,22 @@
+POST http://localhost:81/user/register
+Content-Type: application/json
+
+{
+  "id": 0,
+  "password": "123456",
+  "phone": "13027378933",
+  "name": "admin",
+  "userType": 1,
+  "score": 0
+}
+
+###
+
+POST http://localhost:81/user/login
+Content-Type: application/json
+
+{
+  "password": "123456",
+  "phone": "13027378933"
+}
+###

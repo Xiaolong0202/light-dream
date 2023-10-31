@@ -1,7 +1,6 @@
 package com.dream.backend.service;
 
 import com.dream.backend.domain.User;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
 * @author 13430
@@ -10,4 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserService {
 
+    void login(User user);
+
+    void register(User user);
 }

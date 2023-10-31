@@ -2,6 +2,7 @@ package com.dream.backend.mapper;
 
 import com.dream.backend.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author 13430
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-10-31 16:51:47
 * @Entity com.dream.backend.domain.User
 */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }
