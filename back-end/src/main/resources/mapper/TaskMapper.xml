@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.backend.mapper.TaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.dream.backend.domain.Task">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="volunteerId" column="volunteer_id" jdbcType="BIGINT"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="totalScore" column="total_score" jdbcType="INTEGER"/>
+            <result property="deadline" column="deadline" jdbcType="TIMESTAMP"/>
+            <result property="type" column="type" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,volunteer_id,description,
+        total_score,deadline,type
+    </sql>
+</mapper>

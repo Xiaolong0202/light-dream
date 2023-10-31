@@ -80,7 +80,7 @@ const login = () => {
                         }
                     })
                 } else if (user.value.userType === 2) {
-                    //为儿童
+                    //为志愿者
                     router.push({
                         path: '/volunteer',
                         query: {

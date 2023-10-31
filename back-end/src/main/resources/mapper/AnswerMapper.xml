@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.backend.mapper.AnswerMapper">
+
+    <resultMap id="BaseResultMap" type="com.dream.backend.domain.Answer">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="childUserId" column="child_user_id" jdbcType="BIGINT"/>
+            <result property="taskId" column="task_id" jdbcType="BIGINT"/>
+            <result property="answerStatus" column="answer_status" jdbcType="TINYINT"/>
+            <result property="answerContent" column="answer_content" jdbcType="VARCHAR"/>
+            <result property="imageUrl" column="image_url" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="comments" column="comments" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,child_user_id,task_id,
+        answer_status,answer_content,image_url,
+        score,comments
+    </sql>
+</mapper>
