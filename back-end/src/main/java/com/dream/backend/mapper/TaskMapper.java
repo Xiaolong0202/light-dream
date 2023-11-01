@@ -22,6 +22,10 @@ public interface TaskMapper extends BaseMapper<Task> {
 
     List<Task> queryTaskList(Task task);
 
+    int insert(Task task);
+
+    int deleteTaskById(Task task);
+
 }
 
 

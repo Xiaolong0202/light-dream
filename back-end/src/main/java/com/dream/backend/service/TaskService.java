@@ -14,4 +14,8 @@ public interface TaskService{
 
     public List<Task> queryTaskList(Task task);
 
+    public int addTask(Task task);
+
+    public int deleteTaskById(Task task);
+
 }
