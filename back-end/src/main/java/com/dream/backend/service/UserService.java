@@ -12,4 +12,6 @@ public interface UserService {
     Integer login(User user);
 
     void register(User user);
+
+    User queryByPhone(String phone);
 }

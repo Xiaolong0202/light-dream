@@ -44,6 +44,17 @@ public class UserServiceImpl implements UserService{
         user.setId(IdUtil.getSnowflakeNextId());
         userMapper.insert(user);
     }
+
+    @Override
+    public User queryByPhone(String phone) {
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getPhone,phone);
+        User userDB = userMapper.selectOne(userLambdaQueryWrapper);
+        if (userDB==null){
+            throw new BusinessException("没有对应的用户");
+        }
+        return userDB;
+    }
 }
 
 

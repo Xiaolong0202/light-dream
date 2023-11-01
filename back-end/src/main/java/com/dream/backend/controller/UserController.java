@@ -4,10 +4,7 @@ import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
 import com.dream.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author LiuXiaolong
@@ -39,6 +36,14 @@ public class UserController {
         return CommonResp.buildSuccess("注册成功");
     }
 
+    /**
+     * 根据电话查找用户信息
+     */
+    @GetMapping("/queryByPhone/{phone}")
+    public CommonResp<?> queryByPhone(@PathVariable("phone") String phone){
+        User user = userService.queryByPhone(phone);
+        return CommonResp.buildSuccess(user,"查找成功");
+    }
 
 
 }
