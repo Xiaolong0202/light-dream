@@ -66,6 +66,7 @@ public class UserServiceImpl implements UserService{
     public PageResp<User> queryByVolunteerId(Long volunteerId, Integer currentPage, Integer pageSize) {
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getVolunteerId,volunteerId);
+        userLambdaQueryWrapper.eq(User::getUserType,1);//必须为孩子类型
         PageHelper.startPage(currentPage,pageSize);//分页
         List<User> userList = userMapper.selectList(userLambdaQueryWrapper);
         PageInfo<User> userPageInfo = new PageInfo<>(userList);//构建分页PageInfo
@@ -75,11 +76,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void bindChild(Long volunteerId, Long childId) {
+    public void bindChild(Long volunteerId, String childPhone) {
         User entity = new User();
-        entity.setId(childId);
         entity.setVolunteerId(volunteerId);
-        userMapper.updateById(entity);
+
+        LambdaQueryWrapper<User> updateWrapper = new LambdaQueryWrapper<>();
+        updateWrapper.eq(User::getPhone,childPhone);
+        updateWrapper.eq(User::getUserType,1);//必须为孩子类型
+
+        int update = userMapper.update(entity, updateWrapper);
+        if (update<=0){
+            //没有做出更改也就是说没有绑定成功
+            throw new BusinessException("没有绑定成功,貌似该手机号没有对应的儿童(⊙︿⊙)");
+        }
     }
 
     @Override

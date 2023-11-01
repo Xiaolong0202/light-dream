@@ -62,12 +62,12 @@ public class UserController {
     /**
      * 给孩子绑定志愿者！
      * @param volunteerId
-     * @param childId
+     * @param childPhone
      * @return
      */
     @PutMapping("/bindChild")
-    public CommonResp<?> bindChild(@PathParam("volunteerId") Long volunteerId,@PathParam("childId") Long childId){
-        userService.bindChild(volunteerId,childId);
+    public CommonResp<?> bindChild(@PathParam("volunteerId") Long volunteerId,@PathParam("childPhone") String childPhone){
+        userService.bindChild(volunteerId,childPhone);
         return CommonResp.buildSuccess("绑定成功");
     }
 
