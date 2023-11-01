@@ -3,11 +3,11 @@
         <el-row style="min-height: 100vh">
             <el-col :span="1.75">
                 <el-menu
-                    style="min-height: 100vh"
-                    default-active="2"
-                    class="el-menu-vertical-demo"
-                    @open="handleOpen"
-                    @close="handleClose"
+                        style="min-height: 100vh"
+                        default-active="2"
+                        class="el-menu-vertical-demo"
+                        @open="handleOpen"
+                        @close="handleClose"
                 >
                     <el-menu-item index="1">
                         <!--                        <el-icon><User /></el-icon>-->
@@ -21,16 +21,44 @@
                     </el-menu-item>
                     <el-menu-item index="3">
                         <el-icon>
-                            <Lollipop/>
+                            <Document/>
                         </el-icon>
                         <router-link
-                            :to="{
+                                :to="{
                                  path:'/child/answerTask',
                                  query: {
                                      phone: user.phone
                                 }
                             }">
                             查看任务
+                        </router-link>
+                    </el-menu-item>
+                    <el-menu-item index="4">
+                        <el-icon>
+                            <Goods/>
+                        </el-icon>
+                        <router-link
+                                :to="{
+                                 path:'/child/mall',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                            积分商城
+                        </router-link>
+                    </el-menu-item>
+                    <el-menu-item index="5">
+                        <el-icon>
+                            <ChatSquare/>
+                        </el-icon>
+                        <router-link
+                                :to="{
+                                 path:'/child/chat',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                            志愿者交流
                         </router-link>
                     </el-menu-item>
                 </el-menu>

@@ -47,6 +47,20 @@
                             任务审批
                         </router-link>
                     </el-menu-item>
+                    <el-menu-item index="5">
+                        <el-icon>
+                            <ChatSquare/>
+                        </el-icon>
+                        <router-link
+                            :to="{
+                                 path:'/volunteer/volunteerChat',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                            儿童交流
+                        </router-link>
+                    </el-menu-item>
                 </el-menu>
             </el-col>
             <el-col :span="22.5">
