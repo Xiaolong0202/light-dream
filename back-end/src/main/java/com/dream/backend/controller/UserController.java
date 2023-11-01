@@ -59,5 +59,27 @@ public class UserController {
         return CommonResp.buildSuccess(children,"查询成功");
     }
 
+    /**
+     * 给孩子绑定志愿者！
+     * @param volunteerId
+     * @param childId
+     * @return
+     */
+    @PutMapping("/bindChild")
+    public CommonResp<?> bindChild(@PathParam("volunteerId") Long volunteerId,@PathParam("childId") Long childId){
+        userService.bindChild(volunteerId,childId);
+        return CommonResp.buildSuccess("绑定成功");
+    }
+
+    /**
+     * 解绑指定儿童的志愿者ID
+     * @param childId
+     * @return
+     */
+    @PutMapping("/disBindChild")
+    public CommonResp<?> bindChild(@PathParam("childId") Long childId){
+        userService.disBindChild(childId);
+        return CommonResp.buildSuccess("解绑成功");
+    }
 
 }

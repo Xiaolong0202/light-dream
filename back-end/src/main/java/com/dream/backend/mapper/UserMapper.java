@@ -3,6 +3,8 @@ package com.dream.backend.mapper;
 import com.dream.backend.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
 * @author 13430
@@ -13,6 +15,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
+    /**
+     * 给孩子的志愿者解绑
+     * @param childId
+     */
+    @Update("update dreams.user set volunteer_id = null where id = #{childId}")
+    void disBindChild(@Param("childId") Long childId);
 }
 
 

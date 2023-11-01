@@ -73,6 +73,19 @@ public class UserServiceImpl implements UserService{
         log.info("总行数 " + userPageInfo.getTotal());
         return new PageResp<>(userPageInfo.getTotal(),userList);
     }
+
+    @Override
+    public void bindChild(Long volunteerId, Long childId) {
+        User entity = new User();
+        entity.setId(childId);
+        entity.setVolunteerId(volunteerId);
+        userMapper.updateById(entity);
+    }
+
+    @Override
+    public void disBindChild(Long childId) {
+        userMapper.disBindChild(childId);
+    }
 }
 
 

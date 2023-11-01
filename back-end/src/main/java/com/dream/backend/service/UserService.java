@@ -17,4 +17,8 @@ public interface UserService {
     User queryByPhone(String phone);
 
     PageResp<User> queryByVolunteerId(Long volunteerId, Integer currentPage, Integer pageSize);
+
+    void bindChild(Long volunteerId, Long childId);
+
+    void disBindChild(Long childId);
 }
