@@ -3,7 +3,28 @@
     <el-card class="box-card" style="width: 100%">
       <div class="clearfix">
         <span>任务列表</span>
-        <el-button style="float: right; padding: 3px 0" type="text">新建任务</el-button>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="create">新建任务</el-button>
+        <el-dialog
+            v-model="dialogVisible"
+            title="任务设计"
+            width="50%"
+            @close="closeDialog">
+          <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="任务标题">
+              <el-input></el-input>
+            </el-form-item>
+            <el-form-item label="任务内容">
+              <el-input type="textarea"></el-input>
+            </el-form-item>
+            <el-form-item label="分值（上限100）">
+              <el-input-number v-model="num" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onsubmit">保存</el-button>
+              <el-button @click="dialogVisible = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
       </div>
       <div>
         <el-table :data="tableData" style="width: 100%" max-height="250">
@@ -11,13 +32,13 @@
           </el-table-column>
           <el-table-column prop="title" label="任务标题" width="120">
           </el-table-column>
-          <el-table-column prop="id" label="任务id" width="120">
+          <el-table-column prop="mark" label="任务总分" width="120">
           </el-table-column>
           <el-table-column prop="type" label="任务类型" width="120">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
-            <el-button type="success">发布</el-button>
-            <el-button type="success">删除</el-button>
+            <el-button type="success" @click="release">发布</el-button>
+            <el-button type="success" @click="remove">删除</el-button>
           </el-table-column>
         </el-table>
       </div>
@@ -27,18 +48,45 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import store from "@/store";
-const user = ref(store.state.loginUser)
+// import store from "@/store";
+// const user = ref(store.state.loginUser)
 const tableData = ref([])
+const dialogVisible = ref(false)
+
+const create=()=>{
+  console.log("create")
+  // eslint-disable-next-line no-undef
+  dialogVisible.value = true
+}
+const release=()=>{
+
+}
+const remove=()=>{
+
+}
+const onsubmit=()=>{
+
+}
+
+
 onMounted(() => {
   console.log("hello")
   let temp = {
     date: '2016-05-07',
     title: '古诗默写',
-    id: '001',
+    mark: '50',
     type: '问答题',
   }
   tableData.value.push(temp)
+
+  let temp1 = {
+    date: '2016-05-02',
+    title: '名言默写',
+    mark: '50',
+    type: '问答题',
+  }
+
+  tableData.value.push(temp1)
 })
 </script>
 
