@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.dream.backend.domain.Task">
             <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="volunteerId" column="volunteer_id" jdbcType="BIGINT"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="totalScore" column="total_score" jdbcType="INTEGER"/>
@@ -13,8 +14,23 @@
             <result property="type" column="type" jdbcType="TINYINT"/>
     </resultMap>
 
+    <select id="queryTaskList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Task">
+        SELECT id,name,volunteer_id as "volunteerId",description,total_score as "totalScore",deadline,type
+        FROM task
+        WHERE 1 = 1
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="volunteerId != null">
+            AND volunteer_id = #{volunteerId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+
+
+
     <sql id="Base_Column_List">
-        id,volunteer_id,description,
+        id,name,volunteer_id,description,
         total_score,deadline,type
     </sql>
 </mapper>

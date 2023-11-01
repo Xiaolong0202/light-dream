@@ -1,0 +1,43 @@
+package com.dream.backend.controller;
+
+import com.dream.backend.domain.Task;
+import com.dream.backend.resp.CommonResp;
+import com.dream.backend.service.TaskService;
+import com.dream.backend.service.impl.TaskServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class TaskController {
+
+    @Autowired
+    private TaskServiceImpl taskServiceImpl;
+
+    @RequestMapping(value = "/queryTaskList", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<Task>> queryTaskList(@RequestBody Task task){
+        CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
+        try{
+            List<Task> hasTask = taskServiceImpl.queryTaskList(task);
+            if (CollectionUtils.isEmpty(hasTask)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasTask);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
+
+}
