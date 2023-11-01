@@ -97,29 +97,51 @@ const onsubmit=()=>{
       }
     }
   })
-
 }
 
 
 onMounted(() => {
   console.log("hello")
-  let temp = {
-    date: '2016-05-07',
-    title: '古诗默写',
-    mark: '50',
-    type: '问答题',
-  }
-  tableData.value.push(temp)
+  /////
 
-  let temp1 = {
-    date: '2016-05-02',
-    title: '名言默写',
-    mark: '50',
-    type: '问答题',
-  }
+  axios.post('/task/queryTaskList', user.value).then(resp => {
+    console.log(resp)
+    if (resp) {
+      if (resp.data.success) {
 
-  tableData.value.push(temp1)
+        let tasks = resp.data.content;
+
+        for (var i = 0; i < tasks.length; i++) {
+          let temp = {
+            date: tasks[i].deadline.substring(0,10),
+            title: tasks[i].name,
+            mark: tasks[i].totalScore,
+            type: '问答题',
+          }
+          tableData.value.push(temp)
+        }
+
+      } else {
+        let temp = {
+          date: '2016-05-07',
+          title: '古诗默写',
+          mark: '50',
+          type: '问答题',
+        }
+        tableData.value.push(temp)
+        let temp1 = {
+          date: '2016-05-02',
+          title: '名言默写',
+          mark: '50',
+          type: '问答题',
+        }
+        tableData.value.push(temp1)
+      }
+    }
+
+  })
 })
+
 </script>
 
 

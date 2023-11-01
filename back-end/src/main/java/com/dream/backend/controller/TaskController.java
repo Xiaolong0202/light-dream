@@ -1,6 +1,7 @@
 package com.dream.backend.controller;
 
 import com.dream.backend.domain.Task;
+import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
 import com.dream.backend.service.TaskService;
 import com.dream.backend.service.impl.TaskServiceImpl;
@@ -21,8 +22,11 @@ public class TaskController {
     private TaskServiceImpl taskServiceImpl;
 
     @RequestMapping(value = "/queryTaskList", method = RequestMethod.POST,headers = "Accept=application/json")
-    public CommonResp<List<Task>> queryTaskList(@RequestBody Task task){
+    public CommonResp<List<Task>> queryTaskList(@RequestBody User user){
+        System.out.println(user.toString());
         CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
+        Task task = new Task();
+        task.setVolunteerId(user.getVolunteerId());
         try{
             List<Task> hasTask = taskServiceImpl.queryTaskList(task);
             if (CollectionUtils.isEmpty(hasTask)) {
