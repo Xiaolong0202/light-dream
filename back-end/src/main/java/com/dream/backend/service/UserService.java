@@ -1,6 +1,7 @@
 package com.dream.backend.service;
 
 import com.dream.backend.domain.User;
+import com.dream.backend.resp.PageResp;
 
 /**
 * @author 13430
@@ -14,4 +15,6 @@ public interface UserService {
     void register(User user);
 
     User queryByPhone(String phone);
+
+    PageResp<User> queryByVolunteerId(Long volunteerId, Integer currentPage, Integer pageSize);
 }

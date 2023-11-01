@@ -20,3 +20,8 @@ Content-Type: application/json
   "phone": "13027378933"
 }
 ###
+
+GET http://localhost:81/user/queryChildren/1719571781871759360?currentPage=1&pageSize=5
+Accept: application/json
+
+###
