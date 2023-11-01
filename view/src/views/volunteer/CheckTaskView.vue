@@ -11,13 +11,22 @@
             @close="closeDialog">
           <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="任务标题">
-              <el-input></el-input>
+              <el-input v-model="task.name"></el-input>
             </el-form-item>
             <el-form-item label="任务内容">
-              <el-input type="textarea"></el-input>
+              <el-input type="textarea" v-model="task.description"></el-input>
             </el-form-item>
-            <el-form-item label="分值（上限100）">
-              <el-input-number v-model="num" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
+            <el-form-item label="截止日期">
+              <div class="block">
+                <el-date-picker
+                    v-model="task.deadline"
+                    type="date"
+                    placeholder="选择日期">
+                </el-date-picker>
+              </div>
+            </el-form-item>
+            <el-form-item label="分值">
+              <el-input-number v-model="task.totalScore" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onsubmit">保存</el-button>
@@ -48,10 +57,13 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-// import store from "@/store";
-// const user = ref(store.state.loginUser)
+import axios from "axios";
+import {ElMessage} from "element-plus";
+import store from "@/store";
+const user = ref(store.state.loginUser)
 const tableData = ref([])
 const dialogVisible = ref(false)
+const task = ref({})
 
 const create=()=>{
   console.log("create")
@@ -65,6 +77,26 @@ const remove=()=>{
 
 }
 const onsubmit=()=>{
+  task.value.volunteerId = user.value.id
+  task.value.type = 0
+  console.log(task.value)
+  axios.post('/task/addTask', task.value).then(resp => {
+    console.log(resp)
+    if (resp) {
+      if (resp.data.success) {
+        ElMessage({
+          message: '注册成功',
+          type: 'success',
+        })
+        dialogVisible.value = false
+      } else {
+        ElMessage({
+          message: '注册失败：' + resp.data.message,
+          type: 'error',
+        })
+      }
+    }
+  })
 
 }
 

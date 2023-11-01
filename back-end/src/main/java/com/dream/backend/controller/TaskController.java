@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
-
+@RequestMapping("/task")
 @RestController
 public class TaskController {
 
@@ -44,6 +44,7 @@ public class TaskController {
     @RequestMapping(value = "/addTask", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<Integer> addTask(@RequestBody Task task){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
+        System.out.print(task);
         try{
             int result = taskServiceImpl.addTask(task);
             if (result != 0) {
