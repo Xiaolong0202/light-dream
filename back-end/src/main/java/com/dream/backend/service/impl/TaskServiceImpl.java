@@ -1,5 +1,6 @@
 package com.dream.backend.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dream.backend.domain.Task;
 import com.dream.backend.service.TaskService;
@@ -23,6 +24,21 @@ public class TaskServiceImpl implements TaskService{
     public List<Task> queryTaskList(Task task){
         List<Task> result = taskMapper.queryTaskList(task);
         return result;
+    }
+
+    public int addTask(Task task) {
+        task.setId(IdUtil.getSnowflakeNextId());
+        int taskResult = taskMapper.insert(task);
+        if (taskResult != 0) {
+            return 1;
+        } else {
+            return taskResult;
+        }
+    }
+
+    public int deleteTaskById(Task task){
+        int taskResult = taskMapper.deleteTaskById(task);
+        return taskResult;
     }
 
 }

@@ -26,11 +26,20 @@
         </if>
     </select>
 
+    <insert id="insert" parameterType="com.dream.backend.domain.Task">
+        insert into task (id, name, volunteet_id,description, total_score, deadline, type)
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{volunteerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
+                #{totalScore,jdbcType=INTEGER}, #{deadline,jdbcType=TIMESTAMP},#{type,jdbcType=TINYINT})
+    </insert>
 
-
+    <delete id="deleteTaskById" parameterType="com.dream.backend.domain.Task">
+        delete from task
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
 
     <sql id="Base_Column_List">
         id,name,volunteer_id,description,
         total_score,deadline,type
     </sql>
+
 </mapper>
