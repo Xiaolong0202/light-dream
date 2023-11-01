@@ -4,6 +4,7 @@ import ChildView from "@/views/ChildView.vue";
 import VolunteerView from "@/views/VolunteerView.vue";
 import MyChildrenView from "@/views/volunteer/MyChildrenView.vue";
 import CheckTaskView from "@/views/volunteer/CheckTaskView.vue";
+import AnwserTask from "@/views/child/AnswerTask.vue";
 
 const routes = [
   {
@@ -11,7 +12,11 @@ const routes = [
     component: LoginView
   },{
     path: '/child',
-    component: ChildView
+    component: ChildView,
+    children: [{
+      path: 'answerTask',
+      component: AnwserTask
+    }]
   },{
     path: '/volunteer',
     component: VolunteerView,

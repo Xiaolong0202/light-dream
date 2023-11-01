@@ -3,11 +3,11 @@
         <el-row style="min-height: 100vh">
             <el-col :span="1.75">
                 <el-menu
-                        style="min-height: 100vh"
-                        default-active="2"
-                        class="el-menu-vertical-demo"
-                        @open="handleOpen"
-                        @close="handleClose"
+                    style="min-height: 100vh"
+                    default-active="2"
+                    class="el-menu-vertical-demo"
+                    @open="handleOpen"
+                    @close="handleClose"
                 >
                     <el-menu-item index="1">
                         <!--                        <el-icon><User /></el-icon>-->
@@ -24,7 +24,7 @@
                             <Lollipop/>
                         </el-icon>
                         <router-link
-                                :to="{
+                            :to="{
                                  path:'/volunteer/children',
                                  query: {
                                      phone: user.phone
@@ -33,15 +33,12 @@
                             我的儿童
                         </router-link>
                     </el-menu-item>
-                    <!--                    <el-icon>-->
-                    <!--                        <Files/>-->
-                    <!--                    </el-icon>-->
                     <el-menu-item index="4">
                         <el-icon>
                             <Files/>
                         </el-icon>
                         <router-link
-                                :to="{
+                            :to="{
                                  path:'/volunteer/taskCheck',
                                  query: {
                                      phone: user.phone

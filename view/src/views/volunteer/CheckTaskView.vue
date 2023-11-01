@@ -1,5 +1,6 @@
 <template>
   <div>
+      检查任务
       登录信息
       {{user}}
   </div>
