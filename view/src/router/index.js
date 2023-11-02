@@ -8,6 +8,8 @@ import AnwserTask from "@/views/child/AnswerTask.vue";
 import ChildChat from "@/views/child/ChildChat.vue";
 import ScoreMall from "@/views/child/ScoreMall.vue";
 import VolunteerChatView from "@/views/volunteer/VolunteerChatView.vue";
+import AdminView from "@/views/AdminView.vue";
+import ManageTask from "@/views/admin/ManageTask.vue";
 
 const routes = [
     {
@@ -39,6 +41,15 @@ const routes = [
             },{
                 path: 'volunteerChat',
                 component: VolunteerChatView
+            }
+        ]
+    },{
+        path: '/admin',
+        component: AdminView,
+        children: [
+            {
+                path: 'manageTask',
+                component: ManageTask
             }
         ]
     }
