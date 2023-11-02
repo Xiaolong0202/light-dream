@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-left: 5%;">
-    <el-card class="box-card" style="width: 100%">
+  <div style="padding-left: 5%">
+    <el-card class="box-card" style="width: 100%;margin-top: 5%;margin-left: 5%">
       <div class="clearfix">
         <span>任务列表</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="create">新建任务</el-button>
@@ -36,14 +36,14 @@
         </el-dialog>
       </div>
         <div style="width: 99%">
-          <el-table :data="tableData" max-height="250">
-            <el-table-column fixed prop="deadline" label="截至日期" width="150">
+          <el-table :data="tableData"  style="margin-top: 20px" border>
+            <el-table-column fixed prop="deadline" label="截至日期" width="220">
             </el-table-column>
-            <el-table-column prop="name" label="任务标题" width="120">
+            <el-table-column prop="name" label="任务标题" width="180">
             </el-table-column>
-            <el-table-column prop="totalScore" label="任务总分" width="120">
+            <el-table-column prop="totalScore" label="任务总分" width="500">
             </el-table-column>
-            <el-table-column prop="type" label="任务类型" width="120">
+            <el-table-column prop="type" label="任务类型" width="300">
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="200">
               <template #default="scope">
@@ -62,7 +62,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import axios from "axios";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import store from "@/store";
 
 const user = ref(store.state.loginUser)
@@ -79,30 +79,34 @@ const release=()=>{
 
 }
 const remove=(taskRemove)=>{
-  if(taskRemove.type=="问答题"){
-    taskRemove.type = 1;
-  }else{
-    taskRemove.type = 0;
-  }
-  console.log(taskRemove)
-  axios.post('/task/deleteTaskById', taskRemove).then(resp => {
-    console.log(resp)
-    if (resp) {
-      if (resp.data.success) {
-        ElMessage({
-          message: '删除成功',
-          type: 'success',
-        })
-        dialogVisible.value = false
-        location.reload()
-      } else {
-        ElMessage({
-          message: '删除失败：' + resp.data.message,
-          type: 'error',
-        })
-      }
-    }
-  })
+    ElMessageBox.confirm(`确认要删除任务${taskRemove.name}吗？`)
+        .then(() => {
+            if(taskRemove.type=="问答题"){
+                taskRemove.type = 1;
+            }else{
+                taskRemove.type = 0;
+            }
+            console.log(taskRemove)
+            axios.post('/task/deleteTaskById', taskRemove).then(resp => {
+                console.log(resp)
+                if (resp) {
+                    if (resp.data.success) {
+                        ElMessage({
+                            message: '删除成功',
+                            type: 'success',
+                        })
+                        dialogVisible.value = false
+                        location.reload()
+                    } else {
+                        ElMessage({
+                            message: '删除失败：' + resp.data.message,
+                            type: 'error',
+                        })
+                    }
+                }
+            })
+        }).catch(()=>{})
+
 }
 const onsubmit=()=>{
   task.value.volunteerId = user.value.id
