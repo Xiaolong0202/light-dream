@@ -22,9 +22,9 @@
         <if test="id != null">
             AND id = #{id,jdbcType=BIGINT}
         </if>
-        <if test="volunteerId != null">
-            AND volunteer_id = #{volunteerId,jdbcType=BIGINT}
-        </if>
+<!--        <if test="volunteerId != null">-->
+<!--            AND volunteer_id = #{volunteerId,jdbcType=BIGINT}-->
+<!--        </if>-->
         <if test="isdelete != null">
             AND isdelete = #{isdelete,jdbcType=TINYINT}
         </if>
