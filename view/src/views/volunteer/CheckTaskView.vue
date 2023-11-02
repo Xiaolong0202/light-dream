@@ -37,17 +37,19 @@
       </div>
       <div>
         <el-table :data="tableData" style="width: 100%" max-height="250">
-          <el-table-column fixed prop="date" label="截至日期" width="150">
+          <el-table-column fixed prop="deadline" label="截至日期" width="150">
           </el-table-column>
-          <el-table-column prop="title" label="任务标题" width="120">
+          <el-table-column prop="name" label="任务标题" width="120">
           </el-table-column>
-          <el-table-column prop="mark" label="任务总分" width="120">
+          <el-table-column prop="totalScore" label="任务总分" width="120">
           </el-table-column>
           <el-table-column prop="type" label="任务类型" width="120">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
-            <el-button type="success" @click="release">发布</el-button>
-            <el-button type="success" @click="remove">删除</el-button>
+            <template #default="scope">
+              <el-button @click="release()" type="text" size="small">发布</el-button>
+              <el-button @click="remove(scope.row)" type="text" size="small">删除</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -74,8 +76,26 @@ const create=()=>{
 const release=()=>{
 
 }
-const remove=()=>{
-
+const remove=(taskRemove)=>{
+  console.log(taskRemove)
+  // axios.post('/task/deleteTaskById', taskRemove).then(resp => {
+  //   console.log(resp)
+  //   if (resp) {
+  //     if (resp.data.success) {
+  //       ElMessage({
+  //         message: '删除成功',
+  //         type: 'success',
+  //       })
+  //       dialogVisible.value = false
+  //       location.reload()
+  //     } else {
+  //       ElMessage({
+  //         message: '删除失败：' + resp.data.message,
+  //         type: 'error',
+  //       })
+  //     }
+  //   }
+  // })
 }
 const onsubmit=()=>{
   task.value.volunteerId = user.value.id
@@ -163,9 +183,10 @@ onMounted(() => {
 
         for (var i = 0; i < tasks.length; i++) {
           let temp = {
-            date: tasks[i].deadline.substring(0,10),
-            title: tasks[i].name,
-            mark: tasks[i].totalScore,
+            id:tasks[i].id,
+            deadline: tasks[i].deadline.substring(0,10),
+            name: tasks[i].name,
+            totalScore: tasks[i].totalScore,
             type: '问答题',
           }
           tableData.value.push(temp)
