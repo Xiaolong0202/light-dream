@@ -28,6 +28,7 @@ public class TaskServiceImpl implements TaskService{
 
     public int addTask(Task task) {
         task.setId(IdUtil.getSnowflakeNextId());
+        task.setIsdelete(0);
         int taskResult = taskMapper.insert(task);
         if (taskResult != 0) {
             return 1;

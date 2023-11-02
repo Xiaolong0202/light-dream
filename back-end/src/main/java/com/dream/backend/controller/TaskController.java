@@ -1,9 +1,11 @@
 package com.dream.backend.controller;
 
+import com.dream.backend.domain.Answer;
 import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
 import com.dream.backend.service.TaskService;
+import com.dream.backend.service.impl.AnswerServiceImpl;
 import com.dream.backend.service.impl.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -20,6 +22,9 @@ public class TaskController {
 
     @Autowired
     private TaskServiceImpl taskServiceImpl;
+
+    @Autowired
+    private AnswerServiceImpl answerService;
 
     @RequestMapping(value = "/queryTaskList", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<List<Task>> queryTaskList(@RequestBody User user){
@@ -88,5 +93,42 @@ public class TaskController {
         }
         return commonResp;
     }
+
+    @RequestMapping(value = "/releaseTask", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<Integer> releaseTask(@RequestBody Task task,@RequestBody List<User> users){
+
+        int result = 1;
+
+        for(User user : users){
+            Answer answer = new Answer();
+            answer.setTaskId(task.getId());
+            answer.setChildUserId(user.getId());
+            if(answerService.addAnswer(answer)==0){
+                result = 0;
+            }
+        }
+
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+
+        try {
+            if (result != 0){
+                commonResp.setSuccess(true);
+                commonResp.setContent(1);
+                commonResp.setMessage("删除成功");
+            }else {
+                commonResp.setSuccess(false);
+                commonResp.setContent(0);
+                commonResp.setMessage("删除失败");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return commonResp;
+
+    }
+
+
 
 }

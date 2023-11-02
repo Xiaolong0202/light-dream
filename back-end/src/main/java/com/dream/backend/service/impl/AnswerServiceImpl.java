@@ -1,9 +1,11 @@
 package com.dream.backend.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dream.backend.domain.Answer;
 import com.dream.backend.service.AnswerService;
 import com.dream.backend.mapper.AnswerMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +15,19 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class AnswerServiceImpl implements AnswerService{
+
+    @Autowired
+    private AnswerMapper answerMapper;
+
+    public int addAnswer(Answer answer){
+        answer.setId(IdUtil.getSnowflakeNextId());
+        int answerResult = answerMapper.insert(answer);
+        if (answerResult != 0) {
+            return 1;
+        } else {
+            return answerResult;
+        }
+    }
 
 }
 
