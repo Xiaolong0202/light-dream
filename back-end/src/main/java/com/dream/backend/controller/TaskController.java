@@ -26,7 +26,7 @@ public class TaskController {
         System.out.println(user.toString());
         CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
         Task task = new Task();
-        task.setVolunteerId(user.getVolunteerId());
+        task.setVolunteerId(user.getId());
         task.setIsdelete(0);
         try{
             List<Task> hasTask = taskServiceImpl.queryTaskList(task);

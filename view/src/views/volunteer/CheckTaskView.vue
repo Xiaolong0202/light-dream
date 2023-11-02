@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-left: 5%;">
     <el-card class="box-card" style="width: 100%">
       <div class="clearfix">
         <span>任务列表</span>
@@ -35,24 +35,26 @@
           </el-form>
         </el-dialog>
       </div>
-      <div>
-        <el-table :data="tableData" style="width: 100%" max-height="250">
-          <el-table-column fixed prop="deadline" label="截至日期" width="150">
-          </el-table-column>
-          <el-table-column prop="name" label="任务标题" width="120">
-          </el-table-column>
-          <el-table-column prop="totalScore" label="任务总分" width="120">
-          </el-table-column>
-          <el-table-column prop="type" label="任务类型" width="120">
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="200">
-            <template #default="scope">
-              <el-button @click="release()" type="text" size="small">发布</el-button>
-              <el-button @click="remove(scope.row)" type="text" size="small">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
+        <div style="width: 99%">
+          <el-table :data="tableData" max-height="250">
+            <el-table-column fixed prop="deadline" label="截至日期" width="150">
+            </el-table-column>
+            <el-table-column prop="name" label="任务标题" width="120">
+            </el-table-column>
+            <el-table-column prop="totalScore" label="任务总分" width="120">
+            </el-table-column>
+            <el-table-column prop="type" label="任务类型" width="120">
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="200">
+              <template #default="scope">
+                <el-button @click="release()" type="text" size="small">发布</el-button>
+                <el-button @click="remove(scope.row)" type="text" size="small">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+
     </el-card>
   </div>
 </template>
@@ -105,6 +107,7 @@ const remove=(taskRemove)=>{
 const onsubmit=()=>{
   task.value.volunteerId = user.value.id
   task.value.type = 0
+  task.value.isdelete = 0
   console.log(task.value)
   axios.post('/task/addTask', task.value).then(resp => {
     console.log(resp)
@@ -177,7 +180,6 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 
 onMounted(() => {
   console.log("hello")
-  /////
 
   axios.post('/task/queryTaskList', user.value).then(resp => {
     console.log(resp)
@@ -204,22 +206,6 @@ onMounted(() => {
           }
           tableData.value.push(temp)
         }
-
-      } else {
-        let temp = {
-          date: '2016-05-07',
-          title: '古诗默写',
-          mark: '50',
-          type: '问答题',
-        }
-        tableData.value.push(temp)
-        let temp1 = {
-          date: '2016-05-02',
-          title: '名言默写',
-          mark: '50',
-          type: '问答题',
-        }
-        tableData.value.push(temp1)
       }
     }
 
@@ -230,6 +216,7 @@ onMounted(() => {
 
 
 <style>
+
 .text {
   font-size: 14px;
 }
@@ -251,4 +238,5 @@ onMounted(() => {
 .box-card {
   width: 480px;
 }
+
 </style>
