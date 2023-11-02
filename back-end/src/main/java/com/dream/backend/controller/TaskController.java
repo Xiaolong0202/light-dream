@@ -27,6 +27,7 @@ public class TaskController {
         CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
         Task task = new Task();
         task.setVolunteerId(user.getVolunteerId());
+        task.setIsdelete(0);
         try{
             List<Task> hasTask = taskServiceImpl.queryTaskList(task);
             if (CollectionUtils.isEmpty(hasTask)) {
@@ -68,7 +69,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/deleteTaskById", method = RequestMethod.POST,headers = "Accept=application/json")
-    public CommonResp<Integer> deleteProjectInfo(@RequestBody Task task){
+    public CommonResp<Integer> deleteTaskById(@RequestBody Task task){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
         try {
             int result = taskServiceImpl.deleteTaskById(task);

@@ -55,6 +55,11 @@ public class Task implements Serializable {
      */
     private Integer type;
 
+    /**
+     * 任务删除属性
+     */
+    private Integer isdelete;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -76,7 +81,8 @@ public class Task implements Serializable {
             && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getTotalScore() == null ? other.getTotalScore() == null : this.getTotalScore().equals(other.getTotalScore()))
             && (this.getDeadline() == null ? other.getDeadline() == null : this.getDeadline().equals(other.getDeadline()))
-            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()));
+            && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
+            && (this.getIsdelete() == null ? other.getIsdelete() == null : this.getIsdelete().equals(other.getIsdelete()));
     }
 
     @Override
@@ -90,6 +96,7 @@ public class Task implements Serializable {
         result = prime * result + ((getTotalScore() == null) ? 0 : getTotalScore().hashCode());
         result = prime * result + ((getDeadline() == null) ? 0 : getDeadline().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
+        result = prime * result + ((getIsdelete() == null) ? 0 : getIsdelete().hashCode());
         return result;
     }
 
@@ -106,6 +113,7 @@ public class Task implements Serializable {
         sb.append(", totalScore=").append(totalScore);
         sb.append(", deadline=").append(deadline);
         sb.append(", type=").append(type);
+        sb.append(", isdelete=").append(isdelete);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

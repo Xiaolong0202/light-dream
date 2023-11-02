@@ -77,25 +77,30 @@ const release=()=>{
 
 }
 const remove=(taskRemove)=>{
+  if(taskRemove.type=="问答题"){
+    taskRemove.type = 1;
+  }else{
+    taskRemove.type = 0;
+  }
   console.log(taskRemove)
-  // axios.post('/task/deleteTaskById', taskRemove).then(resp => {
-  //   console.log(resp)
-  //   if (resp) {
-  //     if (resp.data.success) {
-  //       ElMessage({
-  //         message: '删除成功',
-  //         type: 'success',
-  //       })
-  //       dialogVisible.value = false
-  //       location.reload()
-  //     } else {
-  //       ElMessage({
-  //         message: '删除失败：' + resp.data.message,
-  //         type: 'error',
-  //       })
-  //     }
-  //   }
-  // })
+  axios.post('/task/deleteTaskById', taskRemove).then(resp => {
+    console.log(resp)
+    if (resp) {
+      if (resp.data.success) {
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+        })
+        dialogVisible.value = false
+        location.reload()
+      } else {
+        ElMessage({
+          message: '删除失败：' + resp.data.message,
+          type: 'error',
+        })
+      }
+    }
+  })
 }
 const onsubmit=()=>{
   task.value.volunteerId = user.value.id
@@ -182,12 +187,20 @@ onMounted(() => {
         let tasks = resp.data.content;
 
         for (var i = 0; i < tasks.length; i++) {
+          let taskType = ''
+
+          if(tasks[i].type == 1){
+            taskType = '问答题'
+          }else {
+            taskType = '论述题'
+          }
+
           let temp = {
             id:tasks[i].id,
             deadline: tasks[i].deadline.substring(0,10),
             name: tasks[i].name,
             totalScore: tasks[i].totalScore,
-            type: '问答题',
+            type: taskType,
           }
           tableData.value.push(temp)
         }
