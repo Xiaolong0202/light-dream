@@ -1,14 +1,14 @@
 <template>
-    <div style="padding-left: 5%">
+    <div style="">
 
-        <el-card style="width: 100%;margin-top: 5%;margin-left: 5%">
+        <el-card style="width: 90%;margin-top: 5%;margin-left: 5%">
             <span>负责的儿童</span>
             <el-button style="margin-left: 20px" @click="dialogVisible=true">绑定儿童</el-button>
             <!--        {{children}}-->
             <el-table style="margin-top: 20px" :data="children"  border>
-                <el-table-column fixed prop="id" label="儿童ID" width="220"/>
+                <el-table-column fixed prop="id" label="儿童ID" width="200"/>
                 <el-table-column  prop="name" label="姓名" width="180"/>
-                <el-table-column prop="phone" label="电话号码" width="500"/>
+                <el-table-column prop="phone" label="电话号码" width="250"/>
                 <el-table-column prop="score" label="积分数" width="300"/>
                 <el-table-column fixed="right" label="Operations" width="200">
                     <template #default="scope">
@@ -152,6 +152,7 @@ const disAbleChild = (childId, childName) => {
 }
 
 onMounted(() => {
+    console.log("hello")
     getChildrenData()
 })
 </script>

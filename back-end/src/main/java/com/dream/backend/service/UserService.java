@@ -2,6 +2,7 @@ package com.dream.backend.service;
 
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.PageResp;
+import java.util.List;
 
 /**
 * @author 13430
@@ -17,6 +18,8 @@ public interface UserService {
     User queryByPhone(String phone);
 
     PageResp<User> queryByVolunteerId(Long volunteerId, Integer currentPage, Integer pageSize);
+
+    PageResp<User> getAllChildren(Integer currentPage, Integer pageSize);
 
     void bindChild(Long volunteerId, String childPhone);
 
