@@ -16,7 +16,18 @@
                 <el-table-column prop="task.type" label="任务类型" width="150"/>
                 <el-table-column prop="task.deadline" label="截止日期" width="150"/>
                 <el-table-column prop="task.totalScore" label="任务总分" width="150"/>
-                <el-table-column prop="score" label="得分" width="150"/>
+                <el-table-column label="得分" width="150">
+                    <template #default="scope">
+                        <span>
+                             <template v-if="scope.row.answerStatus===3">
+                                scope.row.score
+                            </template>
+                            <template v-else>
+                                ~
+                            </template>
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="任务状态" width="200">
                     <template #default="scope">
                         <span>
@@ -24,7 +35,7 @@
                                 已经作答
                             </template>
                              <template v-if="scope.row.answerStatus===2">
-                                已作答，未提交
+                                已作答，未审批
                             </template>
                              <template v-if="scope.row.answerStatus===3">
                                 已审批
@@ -84,8 +95,8 @@
             <template #footer>
                 <div style="flex: auto">
                     <el-button @click="handleCloseDrawer">cancel</el-button>
-                    <el-button :disabled="!drawEditable" type="primary">保存</el-button>
-                    <el-button :disabled="!drawEditable" type="primary">提交</el-button>
+                    <el-button :disabled="!drawEditable" type="primary" @click="saveEdit()">保存草稿</el-button>
+                    <el-button :disabled="!drawEditable" type="primary" @click="submitEdit()">提交</el-button>
                 </div>
             </template>
         </el-drawer>
@@ -96,7 +107,7 @@
 import {onBeforeUnmount, onMounted, ref, shallowRef, watch} from "vue";
 import store from "@/store";
 import axios from "axios";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 
@@ -123,7 +134,6 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
     editorRef.value = editor // 记录 editor 实例，重要！
 }
-
 //wang editor配置
 
 function getAnswersOfTheChild() {
@@ -132,8 +142,9 @@ function getAnswersOfTheChild() {
             if (resp) {
                 if (resp.data.success) {
                     answers.value = resp.data.content
-                    tableStatus.value = 1//表单状态默认为1
                     console.log(answers.value)
+                    //模拟变化,触发监听事件
+                    tableStatus.value = 1
                 } else {
                     ElMessage({
                         message: '查找儿童任务回答列表失败：' + resp.data.message,
@@ -152,8 +163,10 @@ const drawer = ref(false)//抽屉的可见性
  */
 function handleCloseDrawer() {
     // editorRef.value.setHtml('')
-    editorRef.value.clear()
-    console.log(editorRef.value)
+    if (editorRef.value){
+        editorRef.value.clear()
+        console.log(editorRef.value)
+    }
     currentAnswer.value = {task: {}}
     drawEditable.value = false
     drawer.value = false
@@ -165,23 +178,78 @@ function openDrawer(Answer, editAble) {
     drawer.value = true
 }
 
+/**
+ * 保存孩子对任务的修改
+ */
+function saveEdit(){
+    ElMessageBox.confirm(`确认要保存你的任务草稿吗？`)
+        .then(() => {
+            axios.put('/answer/edit',currentAnswer.value)
+                .then(resp => {
+                    const data = resp.data
+                    if (data) {
+                        if (data.success) {
+                            ElMessage({
+                                message: resp.data.message,
+                                type: 'success',
+                            })
+                            getAnswersOfTheChild()
+                        } else {
+                            ElMessage({
+                                message: resp.data.message,
+                                type: 'error',
+                            })
+                        }
+                    }
+                })
+        }).catch(() => {
+        // catch error
+    })
+}
+
+function submitEdit(){
+    ElMessageBox.confirm(`确认要提交你的任务吗？`)
+        .then(() => {
+            axios.put('/answer/child-submit',currentAnswer.value)
+                .then(resp => {
+                    const data = resp.data
+                    if (data) {
+                        if (data.success) {
+                            ElMessage({
+                                message: resp.data.message,
+                                type: 'success',
+                            })
+                            getAnswersOfTheChild()
+                            drawer.value = false
+                        } else {
+                            ElMessage({
+                                message: resp.data.message,
+                                type: 'error',
+                            })
+                        }
+                    }
+                })
+        }).catch(() => {
+        // catch error
+    })
+}
+
 watch(() => tableStatus.value, () => {
     if (tableStatus.value === 1) {
         tableDataSource.value = []
         for (let a of answers.value) {
             if (a.answerStatus == 1) {
-                tableDataSource.value.push(a)
+                tableDataSource.value.push(Object.assign(a))
             }
         }
     } else {
+        tableDataSource.value = []
         for (let a of answers.value) {
-            tableDataSource.value = []
             if (a.answerStatus != 1) {
-                tableDataSource.value.push(a)
+                tableDataSource.value.push(Object.assign(a))
             }
         }
     }
-    console.log(tableDataSource.value)
 })
 
 onMounted(() => {

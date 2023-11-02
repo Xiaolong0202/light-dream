@@ -66,7 +66,7 @@ public class ChildAnwserController {
      * @param answer
      * @return
      */
-    @PutMapping("/child-subsmit")
+    @PutMapping("/child-submit")
     public CommonResp<?> childSubmit(@RequestBody Answer answer){
         answer.setAnswerStatus(2);
         answerMapper.updateById(answer);
