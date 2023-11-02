@@ -6,15 +6,47 @@
 
     <resultMap id="BaseResultMap" type="com.dream.backend.domain.Task">
             <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="volunteerId" column="volunteer_id" jdbcType="BIGINT"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="totalScore" column="total_score" jdbcType="INTEGER"/>
             <result property="deadline" column="deadline" jdbcType="TIMESTAMP"/>
             <result property="type" column="type" jdbcType="TINYINT"/>
+            <result property="isdelete" column="isdelete" jdbcType="TINYINT"/>
     </resultMap>
 
+    <select id="queryTaskList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Task">
+        SELECT id,name,volunteer_id as "volunteerId",description,total_score as "totalScore",deadline,type,isdelete
+        FROM task
+        WHERE 1 = 1
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+<!--        <if test="volunteerId != null">-->
+<!--            AND volunteer_id = #{volunteerId,jdbcType=BIGINT}-->
+<!--        </if>-->
+        <if test="isdelete != null">
+            AND isdelete = #{isdelete,jdbcType=TINYINT}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.dream.backend.domain.Task">
+        insert into task (id, name, volunteer_id,description, total_score, deadline, type, isdelete)
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{volunteerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
+                #{totalScore,jdbcType=INTEGER}, #{deadline,jdbcType=TIMESTAMP},#{type,jdbcType=TINYINT},#{isdelete,jdbcType=TINYINT})
+    </insert>
+
+    <update id="deleteTaskById" parameterType="com.dream.backend.domain.Task">
+        update task
+        <set>
+            isdelete = 1
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
     <sql id="Base_Column_List">
-        id,volunteer_id,description,
-        total_score,deadline,type
+        id,name,volunteer_id,description,
+        total_score,deadline,type,isdelete
     </sql>
+
 </mapper>
