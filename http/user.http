@@ -20,3 +20,23 @@ Content-Type: application/json
   "phone": "13027378933"
 }
 ###
+
+#查询志愿者管理的儿童信息
+GET http://localhost:81/user/queryChildren/1719571781871759360?currentPage=1&pageSize=5
+Accept: application/json
+
+
+#绑定
+###
+PUT http://localhost:81/user/bindChild?volunteerId=1719571781871759360&childId=1719571666675200000
+Content-Type: application/json
+
+###
+
+#接触绑定
+PUT http://localhost:81/user/disBindChild?childId=1719571666675200000
+Content-Type: application/json
+
+
+
+###

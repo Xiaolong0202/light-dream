@@ -2,6 +2,7 @@ package com.dream.backend.mapper;
 
 import com.dream.backend.domain.Answer;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author 13430
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-10-31 21:29:39
 * @Entity com.dream.backend.domain.Answer
 */
+@Mapper
 public interface AnswerMapper extends BaseMapper<Answer> {
 
 }

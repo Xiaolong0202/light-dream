@@ -75,6 +75,7 @@ import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import store from "@/store";
 
 const route = useRoute()
 
@@ -89,6 +90,7 @@ function getCurrentUser() {
             if (resp) {
                 if (resp.data.success) {
                     user.value = resp.data.content
+                    store.commit('setLoginUser', user.value)
                 } else {
                     ElMessage({
                         message: '获取用户失败：' + resp.data.message,
