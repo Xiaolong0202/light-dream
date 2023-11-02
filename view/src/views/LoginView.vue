@@ -36,6 +36,7 @@
                 <el-select v-model="user.userType" placeholder="请选择你的身份">
                     <el-option label="儿童" value="1"/>
                     <el-option label="志愿者" value="2"/>
+                    <el-option label="管理员" value="3"/>
                 </el-select>
             </el-form-item>
         </el-form>
@@ -83,6 +84,14 @@ const login = () => {
                     //为志愿者
                     router.push({
                         path: '/volunteer',
+                        query: {
+                            phone: user.value.phone
+                        }
+                    })
+                } else if (user.value.userType === 3) {
+                    //为管理者
+                    router.push({
+                        path: '/admin',
                         query: {
                             phone: user.value.phone
                         }
