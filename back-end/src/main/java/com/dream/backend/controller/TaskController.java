@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @RequestMapping("/task")
 @RestController
 public class TaskController {
@@ -95,36 +97,47 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/releaseTask", method = RequestMethod.POST,headers = "Accept=application/json")
-    public CommonResp<Integer> releaseTask(@RequestBody Task task,@RequestBody List<User> users){
+    public CommonResp<Integer> releaseTask(@RequestBody Map<String, Object> data){
 
-        int result = 1;
+        Task task = new Task();
+        task.setId(Long.parseLong((String) data.get("id")));
 
-        for(User user : users){
-            Answer answer = new Answer();
-            answer.setTaskId(task.getId());
-            answer.setChildUserId(user.getId());
-            if(answerService.addAnswer(answer)==0){
-                result = 0;
-            }
-        }
+        Object temp = data.get("users");
+        System.out.println(temp);
+
+        //temp是传过来的数组，但我现在不知道怎么把它变成User数组了
+
+//        int result = 1;
+//
+//        for(User user : users){
+//            Answer answer = new Answer();
+//            answer.setTaskId(task.getId());
+//            answer.setChildUserId(user.getId());
+//            if(answerService.addAnswer(answer)==0){
+//                result = 0;
+//            }
+//        }
+//
+//        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+//
+//        try {
+//            if (result != 0){
+//                commonResp.setSuccess(true);
+//                commonResp.setContent(1);
+//                commonResp.setMessage("删除成功");
+//            }else {
+//                commonResp.setSuccess(false);
+//                commonResp.setContent(0);
+//                commonResp.setMessage("删除失败");
+//            }
+//        }catch (Exception e){
+//            System.out.println(e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//        return commonResp;
 
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
-
-        try {
-            if (result != 0){
-                commonResp.setSuccess(true);
-                commonResp.setContent(1);
-                commonResp.setMessage("删除成功");
-            }else {
-                commonResp.setSuccess(false);
-                commonResp.setContent(0);
-                commonResp.setMessage("删除失败");
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-
         return commonResp;
 
     }

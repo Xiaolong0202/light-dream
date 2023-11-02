@@ -130,26 +130,29 @@ const selectionLineChangeHandle=(val)=>{
 * 任务发送*/
 const taskSend=()=>{
   ElMessageBox.confirm(`确认将任务发送到所选儿童吗？`).then(()=>{
-    console.log(taskToRelease.value)//要发送的任务
+
+    console.log(task.value)//要发送的任务
     console.log(pickChildrenList.value)//所选择的儿童列表
-    // axios.post('/task/releaseTask', taskToRelease,pickChildrenList).then(resp => {
-    //   console.log(resp)
-    //   if (resp) {
-    //     if (resp.data.success) {
-    //       ElMessage({
-    //         message: '发布成功',
-    //         type: 'success',
-    //       })
-    //       dialogVisible.value = false
-    //       location.reload()
-    //     } else {
-    //       ElMessage({
-    //         message: '发布失败：' + resp.data.message,
-    //         type: 'error',
-    //       })
-    //     }
-    //   }
-    // })
+
+    axios.post('/task/releaseTask', {id:taskToRelease.value.id,users:pickChildrenList.value})
+        .then(resp => {
+      console.log(resp)
+      if (resp) {
+        if (resp.data.success) {
+          ElMessage({
+            message: '发布成功',
+            type: 'success',
+          })
+          dialogVisible.value = false
+          location.reload()
+        } else {
+          ElMessage({
+            message: '发布失败：' + resp.data.message,
+            type: 'error',
+          })
+        }
+      }
+    })
     checkboxVisible.value=false
   })
 }
