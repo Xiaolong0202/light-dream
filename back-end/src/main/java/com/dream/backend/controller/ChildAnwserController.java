@@ -38,6 +38,7 @@ public class ChildAnwserController {
     @GetMapping("/getList/{childId}")
     public CommonResp<?> getAllAnwser(@PathVariable("childId") Long childId){
         LambdaQueryWrapper<Answer> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Answer::getId);
         queryWrapper.eq(Answer::getChildUserId,childId);
         List<Answer> answers = answerMapper.selectList(queryWrapper);
         List<Map> res = answers.stream().map(answer -> {
