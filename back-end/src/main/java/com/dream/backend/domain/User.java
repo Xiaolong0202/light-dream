@@ -32,6 +32,7 @@ public class User implements Serializable {
     /**
      * 对应的志愿者ID,如果该用户类型为志愿者，该字段就为空
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long volunteerId;
 
     /**

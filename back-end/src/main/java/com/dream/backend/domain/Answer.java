@@ -27,11 +27,13 @@ public class Answer implements Serializable {
     /**
      * 儿童用户ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long childUserId;
 
     /**
      * 任务ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long taskId;
 
     /**
