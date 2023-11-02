@@ -115,7 +115,7 @@ const user = ref(store.state.loginUser)
 
 const answers = ref([])
 
-const tableStatus = ref(-1)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
+const tableStatus = ref(1)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
 
 const tableDataSource = ref([])
 //wang editor配置
@@ -144,7 +144,7 @@ function getAnswersOfTheChild() {
                     answers.value = resp.data.content
                     console.log(answers.value)
                     //模拟变化,触发监听事件
-                    tableStatus.value = 1
+                    updateDataSource()
                 } else {
                     ElMessage({
                         message: '查找儿童任务回答列表失败：' + resp.data.message,
@@ -235,6 +235,9 @@ function submitEdit(){
 }
 
 watch(() => tableStatus.value, () => {
+    updateDataSource()
+})
+function updateDataSource(){
     if (tableStatus.value === 1) {
         tableDataSource.value = []
         for (let a of answers.value) {
@@ -250,8 +253,7 @@ watch(() => tableStatus.value, () => {
             }
         }
     }
-})
-
+}
 onMounted(() => {
     getAnswersOfTheChild()
 })
