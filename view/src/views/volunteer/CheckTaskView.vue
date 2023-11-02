@@ -60,6 +60,7 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import store from "@/store";
+
 const user = ref(store.state.loginUser)
 const tableData = ref([])
 const dialogVisible = ref(false)
@@ -85,19 +86,68 @@ const onsubmit=()=>{
     if (resp) {
       if (resp.data.success) {
         ElMessage({
-          message: '注册成功',
+          message: '添加成功',
           type: 'success',
         })
         dialogVisible.value = false
+        location.reload()
       } else {
         ElMessage({
-          message: '注册失败：' + resp.data.message,
+          message: '添加失败：' + resp.data.message,
           type: 'error',
         })
       }
     }
   })
 }
+
+
+// 解决ERROR ResizeObserver loop completed with undelivered notifications.
+
+//问题的
+
+const debounce = (fn, delay) => {
+
+  let timer = null;
+
+  return function () {
+
+    let context = this;
+
+    let args = arguments;
+
+    clearTimeout(timer);
+
+    timer = setTimeout(function () {
+
+      fn.apply(context, args);
+
+    }, delay);
+
+  }
+
+}
+
+// 解决ERROR ResizeObserver loop completed with undelivered notifications.
+
+//问题的
+
+const _ResizeObserver = window.ResizeObserver;
+
+window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
+
+  constructor(callback) {
+
+    callback = debounce(callback, 16);
+
+    super(callback);
+
+  }
+
+}
+
+
+
 
 
 onMounted(() => {
