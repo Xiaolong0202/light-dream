@@ -1,5 +1,6 @@
 package com.dream.backend.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dream.backend.domain.Answer;
 import com.dream.backend.domain.Task;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author LiuXiaolong
@@ -25,6 +28,8 @@ public class ChildAnwserController {
     @Autowired
     AnswerMapper answerMapper;
 
+    @Autowired
+    TaskMapper taskMapper;
 
     /**
      * 查询一个孩子所有的anwser
@@ -35,7 +40,15 @@ public class ChildAnwserController {
         LambdaQueryWrapper<Answer> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Answer::getChildUserId,childId);
         List<Answer> answers = answerMapper.selectList(queryWrapper);
-        return CommonResp.buildSuccess(answers,"查询成功");
+        List<Map> res = answers.stream().map(answer -> {
+            Map map = BeanUtil.copyProperties(answer, Map.class);
+            LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            taskLambdaQueryWrapper.eq(Task::getId, answer.getTaskId());
+            Task task = taskMapper.selectOne(taskLambdaQueryWrapper);
+            map.put("task", task);
+            return map;
+        }).collect(Collectors.toList());
+        return CommonResp.buildSuccess(res,"查询成功");
     }
 
     /**
