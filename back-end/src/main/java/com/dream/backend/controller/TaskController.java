@@ -102,42 +102,44 @@ public class TaskController {
         Task task = new Task();
         task.setId(Long.parseLong((String) data.get("id")));
 
-        Object temp = data.get("users");
-        System.out.println(temp);
+        List<User> users = new ArrayList<User>();
+        String userList = data.get("users").toString();
+        String[] userIds = userList.split(",");
+        for(String userId:userIds){
+            User user = new User();
+            user.setId(Long.parseLong(userId));
+            users.add(user);
+        }
 
-        //temp是传过来的数组，但我现在不知道怎么把它变成User数组了
+        int result = 1;
 
-//        int result = 1;
-//
-//        for(User user : users){
-//            Answer answer = new Answer();
-//            answer.setTaskId(task.getId());
-//            answer.setChildUserId(user.getId());
-//            if(answerService.addAnswer(answer)==0){
-//                result = 0;
-//            }
-//        }
-//
-//        CommonResp<Integer> commonResp = new CommonResp<Integer>();
-//
-//        try {
-//            if (result != 0){
-//                commonResp.setSuccess(true);
-//                commonResp.setContent(1);
-//                commonResp.setMessage("删除成功");
-//            }else {
-//                commonResp.setSuccess(false);
-//                commonResp.setContent(0);
-//                commonResp.setMessage("删除失败");
-//            }
-//        }catch (Exception e){
-//            System.out.println(e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//        return commonResp;
+        for(User user : users){
+            Answer answer = new Answer();
+            answer.setTaskId(task.getId());
+            answer.setChildUserId(user.getId());
+            answer.setAnswerStatus(1);
+            if(answerService.addAnswer(answer)==0){
+                result = 0;
+            }
+        }
 
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
+
+        try {
+            if (result != 0){
+                commonResp.setSuccess(true);
+                commonResp.setContent(1);
+                commonResp.setMessage("发布成功");
+            }else {
+                commonResp.setSuccess(false);
+                commonResp.setContent(0);
+                commonResp.setMessage("发布失败");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
         return commonResp;
 
     }

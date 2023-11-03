@@ -134,7 +134,16 @@ const taskSend=()=>{
     console.log(task.value)//要发送的任务
     console.log(pickChildrenList.value)//所选择的儿童列表
 
-    axios.post('/task/releaseTask', {id:taskToRelease.value.id,users:pickChildrenList.value})
+    let users = ""
+
+    for(var i=0; i<pickChildrenList.value.length; i++){
+      users = users + pickChildrenList.value[i].id + ","
+    }
+
+    users = users.substring(0,users.length-1)
+    console.log(users)
+
+    axios.post('/task/releaseTask', {id:taskToRelease.value.id,users:users})
         .then(resp => {
       console.log(resp)
       if (resp) {
