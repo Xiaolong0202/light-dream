@@ -175,6 +175,9 @@ function handleCloseDrawer() {
 function openDrawer(Answer, editAble) {
     drawEditable.value = editAble
     currentAnswer.value = Object.assign(Answer)
+  if (!currentAnswer.value.answerContent){
+    currentAnswer.value.answerContent = ''
+  }
     drawer.value = true
 }
 
