@@ -6,6 +6,7 @@ import com.dream.backend.domain.Answer;
 import com.dream.backend.domain.Task;
 import com.dream.backend.mapper.AnswerMapper;
 import com.dream.backend.mapper.TaskMapper;
+import com.dream.backend.resp.AnwserResp;
 import com.dream.backend.resp.CommonResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +42,13 @@ public class ChildAnwserController {
         queryWrapper.orderByDesc(Answer::getId);
         queryWrapper.eq(Answer::getChildUserId,childId);
         List<Answer> answers = answerMapper.selectList(queryWrapper);
-        List<Map> res = answers.stream().map(answer -> {
-            Map map = BeanUtil.copyProperties(answer, Map.class);
+        List<AnwserResp> res = answers.stream().map(answer -> {
+            AnwserResp anwserResp = BeanUtil.copyProperties(answer, AnwserResp.class);
             LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
             taskLambdaQueryWrapper.eq(Task::getId, answer.getTaskId());
             Task task = taskMapper.selectOne(taskLambdaQueryWrapper);
-            map.put("task", task);
-            return map;
+            anwserResp.setTask(task);
+            return anwserResp;
         }).collect(Collectors.toList());
         return CommonResp.buildSuccess(res,"查询成功");
     }
