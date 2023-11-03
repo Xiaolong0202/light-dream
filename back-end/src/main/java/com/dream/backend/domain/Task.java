@@ -33,6 +33,7 @@ public class Task implements Serializable {
     /**
      * 志愿者ID
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long volunteerId;
 
     /**

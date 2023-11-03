@@ -32,7 +32,7 @@
                     <template #default="scope">
                         <span>
                             <template v-if="scope.row.answerStatus===1">
-                                已经作答
+                                未作答
                             </template>
                              <template v-if="scope.row.answerStatus===2">
                                 已作答，未审批
