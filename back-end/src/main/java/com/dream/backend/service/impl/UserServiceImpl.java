@@ -76,6 +76,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public PageResp<User> getAllChildren(Integer currentPage, Integer pageSize) {
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getUserType,1);//必须为孩子类型
+        PageHelper.startPage(currentPage,pageSize);//分页
+        List<User> userList = userMapper.selectList(userLambdaQueryWrapper);
+        PageInfo<User> userPageInfo = new PageInfo<>(userList);//构建分页PageInfo
+        log.info("总页数 " + userPageInfo.getPages());
+        log.info("总行数 " + userPageInfo.getTotal());
+        return new PageResp<>(userPageInfo.getTotal(),userList);
+    }
+
+    @Override
     public void bindChild(Long volunteerId, String childPhone) {
         User entity = new User();
         entity.setVolunteerId(volunteerId);

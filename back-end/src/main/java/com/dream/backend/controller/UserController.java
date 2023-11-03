@@ -60,6 +60,15 @@ public class UserController {
     }
 
     /**
+     * 获取所有孩子的列表
+     */
+    @GetMapping("/getAllChildren")
+    public CommonResp<?> getAllChildren(@PathParam("currentPage") Integer currentPage, @PathParam("pageSize") Integer pageSize) {
+        PageResp<User> chilren = userService.getAllChildren(currentPage,pageSize);
+        return CommonResp.buildSuccess(chilren,"获取列表成功");
+    }
+
+    /**
      * 给孩子绑定志愿者！
      * @param volunteerId
      * @param childPhone

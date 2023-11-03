@@ -15,9 +15,16 @@
             <result property="comments" column="comments" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <insert id="insert" parameterType="com.dream.backend.domain.Answer">
+        insert into answer (id, child_user_id, task_id, answer_status, answer_content, image_url, score, comments)
+        values (#{id,jdbcType=BIGINT}, #{childUserId,jdbcType=BIGINT}, #{taskId,jdbcType=BIGINT}, #{answerStatus,jdbcType=TINYINT},
+                #{answerContent,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR},#{score,jdbcType=INTEGER},#{comments,jdbcType=VARCHAR})
+    </insert>
+
     <sql id="Base_Column_List">
         id,child_user_id,task_id,
         answer_status,answer_content,image_url,
         score,comments
     </sql>
+
 </mapper>

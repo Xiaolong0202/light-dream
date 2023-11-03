@@ -10,4 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface AnswerService {
 
+    public int addAnswer(Answer answer);
+
 }

@@ -1,9 +1,11 @@
 package com.dream.backend.controller;
 
+import com.dream.backend.domain.Answer;
 import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
 import com.dream.backend.service.TaskService;
+import com.dream.backend.service.impl.AnswerServiceImpl;
 import com.dream.backend.service.impl.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -12,14 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @RequestMapping("/task")
 @RestController
 public class TaskController {
 
     @Autowired
     private TaskServiceImpl taskServiceImpl;
+
+    @Autowired
+    private AnswerServiceImpl answerService;
 
     @RequestMapping(value = "/queryTaskList", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<List<Task>> queryTaskList(@RequestBody User user){
@@ -88,5 +95,55 @@ public class TaskController {
         }
         return commonResp;
     }
+
+    @RequestMapping(value = "/releaseTask", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<Integer> releaseTask(@RequestBody Map<String, Object> data){
+
+        Task task = new Task();
+        task.setId(Long.parseLong((String) data.get("id")));
+
+        List<User> users = new ArrayList<User>();
+        String userList = data.get("users").toString();
+        String[] userIds = userList.split(",");
+        for(String userId:userIds){
+            User user = new User();
+            user.setId(Long.parseLong(userId));
+            users.add(user);
+        }
+
+        int result = 1;
+
+        for(User user : users){
+            Answer answer = new Answer();
+            answer.setTaskId(task.getId());
+            answer.setChildUserId(user.getId());
+            answer.setAnswerStatus(1);
+            if(answerService.addAnswer(answer)==0){
+                result = 0;
+            }
+        }
+
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+
+        try {
+            if (result != 0){
+                commonResp.setSuccess(true);
+                commonResp.setContent(1);
+                commonResp.setMessage("发布成功");
+            }else {
+                commonResp.setSuccess(false);
+                commonResp.setContent(0);
+                commonResp.setMessage("发布失败");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return commonResp;
+
+    }
+
+
 
 }
