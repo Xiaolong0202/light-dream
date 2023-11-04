@@ -95,8 +95,8 @@
 <script setup>
 import {onMounted, ref,watch} from "vue";
 import store from "@/store";
-//import axios from "axios";
-import {ElMessageBox} from "element-plus";
+import axios from "axios";
+import {ElMessage,ElMessageBox} from "element-plus";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 //import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 
@@ -126,22 +126,25 @@ const tableDataSource = ref([])
 
 function getAnswersByVolunteerId() {
   console.log('查找回答')
-  // axios.get(`/answer/getByVolunteerId/${user.value.id}`)
-  //     .then(resp => {
-  //       if (resp) {
-  //         if (resp.data.success) {
-  //           answers.value = resp.data.content
-  //           console.log(answers.value)
-  //           //模拟变化,触发监听事件
-  //           updateDataSource()
-  //         } else {
-  //           ElMessage({
-  //             message: '查找志愿者审批回答列表失败：' + resp.data.message,
-  //             type: 'error',
-  //           })
-  //         }
-  //       }
-  //     })
+
+  axios.post('/answer/queryAnswerListByVolunteerId/',{volunteerId:user.value.id})
+      .then(resp => {
+        if (resp) {
+          if (resp.data.success) {
+            ElMessage({message:'1111111'})
+            console.log(resp.data.content)
+            //answerList.value = resp.data.content
+            //console.log(answerList.value)
+            //模拟变化,触发监听事件
+            updateDataSource()
+          } else {
+            ElMessage({
+              message: '查找志愿者审批回答列表失败：' + resp.data.message,
+              type: 'error',
+            })
+          }
+        }
+      })
 }
 
 
@@ -226,29 +229,6 @@ function updateDataSource(){
 onMounted(() => {
   console.log(user.value)
   getAnswersByVolunteerId()
-  let temp1 = {
-    task:{
-      name:'任务一',
-      description:'任务内容一',
-      totalScore: 20,
-    },
-      child: '儿童1',
-      answerContent: '<p>回答一</p>',
-      answerStatus: 2
-  }
-  let temp2 = {
-    task:{
-      name:'任务二',
-      description:'任务内容二',
-      totalScore: 30,
-    },
-      child: '儿童2',
-      answerContent: '<p>回答二</p>',
-      answerStatus: 3
-  }
-  answerList.value.push(temp1)
-  answerList.value.push(temp2)
-  currentAnswer.value = answerList.value[0]
 })
 </script>
 

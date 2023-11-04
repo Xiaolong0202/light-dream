@@ -100,6 +100,9 @@ public class ChildAnwserController {
             answers.addAll(answerService.queryAnswerList(answer));
         }
 
+        System.out.println(11111);
+        System.out.println(answers.toString());
+
         CommonResp<List<Answer>> commonResp = new CommonResp<List<Answer>>();
         try {
             if (CollectionUtils.isEmpty(answers)){

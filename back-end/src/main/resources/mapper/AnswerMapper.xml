@@ -15,7 +15,7 @@
             <result property="comments" column="comments" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="queryAnswerList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Task">
+    <select id="queryAnswerList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Answer">
         SELECT id,child_user_id as "childUserId",task_id as "taskId",answer_status as "answerStatus",
         answer_content as "answerContent",image_url as "imageUrl",score,comments
         FROM answer
