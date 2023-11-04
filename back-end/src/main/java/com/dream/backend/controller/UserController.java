@@ -1,5 +1,6 @@
 package com.dream.backend.controller;
 
+import com.dream.backend.domain.Answer;
 import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
@@ -128,6 +129,29 @@ public class UserController {
                 commonResp.setSuccess(false);
                 commonResp.setContent(0);
                 commonResp.setMessage("修改失败");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
+
+    @RequestMapping(value = "/getChildByAnswer", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<User>> getChildByAnswer(@RequestBody Answer answer){
+        User child = new User();
+        child.setId(answer.getChildUserId());
+        CommonResp<List<User>> commonResp = new CommonResp<List<User>>();
+        try{
+            List<User> hasUser = userService.queryUserList(child);
+            if (CollectionUtils.isEmpty(hasUser)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasUser);
+                commonResp.setMessage("成功");
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());

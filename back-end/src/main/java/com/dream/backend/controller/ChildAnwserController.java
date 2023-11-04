@@ -100,8 +100,7 @@ public class ChildAnwserController {
             answers.addAll(answerService.queryAnswerList(answer));
         }
 
-        System.out.println(11111);
-        System.out.println(answers.toString());
+
 
         CommonResp<List<Answer>> commonResp = new CommonResp<List<Answer>>();
         try {
@@ -120,6 +119,27 @@ public class ChildAnwserController {
         }
         return commonResp;
 
+    }
+
+    @RequestMapping(value = "/evaluateAnswer", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<Integer> evaluateAnswer(@RequestBody Answer answer){
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+        try{
+            int result = answerService.modifyAnswer(answer);
+            if (result != 0){
+                commonResp.setSuccess(true);
+                commonResp.setContent(result);
+                commonResp.setMessage("批阅成功");
+            }else {
+                commonResp.setSuccess(false);
+                commonResp.setContent(0);
+                commonResp.setMessage("批阅失败");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
     }
 
 
