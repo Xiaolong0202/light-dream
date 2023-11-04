@@ -40,6 +40,22 @@
                 #{answerContent,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR},#{score,jdbcType=INTEGER},#{comments,jdbcType=VARCHAR})
     </insert>
 
+    <update id="updateAnswerSelective" parameterType="com.dream.backend.domain.Answer">
+        update answer
+        <set>
+            <if test="score != null">
+                score = #{score,jdbcType=INTEGER},
+            </if>
+            <if test="comments != null and comments != ''">
+                comments = #{comments,jdbcType=VARCHAR},
+            </if>
+            <if test="answerStatus != null">
+                answer_status = #{answerStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
     <sql id="Base_Column_List">
         id,child_user_id,task_id,
         answer_status,answer_content,image_url,
