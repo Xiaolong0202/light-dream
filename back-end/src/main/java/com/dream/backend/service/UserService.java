@@ -1,5 +1,6 @@
 package com.dream.backend.service;
 
+import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.PageResp;
 import java.util.List;
@@ -24,4 +25,10 @@ public interface UserService {
     void bindChild(Long volunteerId, String childPhone);
 
     void disBindChild(Long childId);
+
+    List<User> queryUserList(User user);
+
+    List<User> queryAllUser(User user);
+
+    int modifyUser(User user);
 }

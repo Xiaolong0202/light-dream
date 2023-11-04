@@ -1,261 +1,257 @@
-<!--<template>-->
-<!--  <div style="padding-left: 5%">-->
-<!--    <el-card class="box-card" style="width: 100%;margin-top: 5%;margin-left: 5%">-->
-<!--      <div class="clearfix">-->
-<!--        <span>任务列表</span>-->
-<!--        <el-button style="float: right; padding: 3px 0" type="text" @click="create">新建任务</el-button>-->
-<!--        <el-dialog-->
-<!--            v-model="dialogVisible"-->
-<!--            title="任务设计"-->
-<!--            width="50%"-->
-<!--            @close="closeDialog">-->
-<!--          <el-form ref="form" :model="form" label-width="80px">-->
-<!--            <el-form-item label="任务标题">-->
-<!--              <el-input v-model="task.name"></el-input>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="任务内容">-->
-<!--              <el-input type="textarea" v-model="task.description"></el-input>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="截止日期">-->
-<!--              <div class="block">-->
-<!--                <el-date-picker-->
-<!--                    v-model="task.deadline"-->
-<!--                    type="date"-->
-<!--                    placeholder="选择日期">-->
-<!--                </el-date-picker>-->
-<!--              </div>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="分值">-->
-<!--              <el-input-number v-model="task.totalScore" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item>-->
-<!--              <el-button type="primary" @click="onsubmit">保存</el-button>-->
-<!--              <el-button @click="dialogVisible = false">取消</el-button>-->
-<!--            </el-form-item>-->
-<!--          </el-form>-->
-<!--        </el-dialog>-->
-<!--      </div>-->
-<!--        <div style="width: 99%">-->
-<!--          <el-table :data="tableData"  style="margin-top: 20px" border>-->
-<!--            <el-table-column fixed prop="deadline" label="截至日期" width="220">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="name" label="任务标题" width="180">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="totalScore" label="任务总分" width="500">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column prop="type" label="任务类型" width="300">-->
-<!--            </el-table-column>-->
-<!--            <el-table-column fixed="right" label="操作" width="200">-->
-<!--              <template #default="scope">-->
-<!--                <el-button @click="release()" type="text" size="small">发布</el-button>-->
-<!--                <el-button @click="remove(scope.row)" type="text" size="small">删除</el-button>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table>-->
-<!--        </div>-->
-
-
-<!--    </el-card>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script setup>-->
-<!--import { onMounted, ref } from "vue";-->
-<!--import axios from "axios";-->
-<!--import {ElMessage, ElMessageBox} from "element-plus";-->
-<!--import store from "@/store";-->
-
-<!--const user = ref(store.state.loginUser)-->
-<!--const tableData = ref([])-->
-<!--const dialogVisible = ref(false)-->
-<!--const task = ref({})-->
-
-<!--const create=()=>{-->
-<!--  console.log("create")-->
-<!--  // eslint-disable-next-line no-undef-->
-<!--  dialogVisible.value = true-->
-<!--}-->
-<!--const release=()=>{-->
-
-<!--}-->
-<!--const remove=(taskRemove)=>{-->
-<!--    ElMessageBox.confirm(`确认要删除任务${taskRemove.name}吗？`)-->
-<!--        .then(() => {-->
-<!--            if(taskRemove.type=="问答题"){-->
-<!--                taskRemove.type = 1;-->
-<!--            }else{-->
-<!--                taskRemove.type = 0;-->
-<!--            }-->
-<!--            console.log(taskRemove)-->
-<!--            axios.post('/task/deleteTaskById', taskRemove).then(resp => {-->
-<!--                console.log(resp)-->
-<!--                if (resp) {-->
-<!--                    if (resp.data.success) {-->
-<!--                        ElMessage({-->
-<!--                            message: '删除成功',-->
-<!--                            type: 'success',-->
-<!--                        })-->
-<!--                        dialogVisible.value = false-->
-<!--                        location.reload()-->
-<!--                    } else {-->
-<!--                        ElMessage({-->
-<!--                            message: '删除失败：' + resp.data.message,-->
-<!--                            type: 'error',-->
-<!--                        })-->
-<!--                    }-->
-<!--                }-->
-<!--            })-->
-<!--        }).catch(()=>{})-->
-
-<!--}-->
-<!--const onsubmit=()=>{-->
-<!--  task.value.volunteerId = user.value.id-->
-<!--  task.value.type = 0-->
-<!--  task.value.isdelete = 0-->
-<!--  console.log(task.value)-->
-<!--  axios.post('/task/addTask', task.value).then(resp => {-->
-<!--    console.log(resp)-->
-<!--    if (resp) {-->
-<!--      if (resp.data.success) {-->
-<!--        ElMessage({-->
-<!--          message: '添加成功',-->
-<!--          type: 'success',-->
-<!--        })-->
-<!--        dialogVisible.value = false-->
-<!--        location.reload()-->
-<!--      } else {-->
-<!--        ElMessage({-->
-<!--          message: '添加失败：' + resp.data.message,-->
-<!--          type: 'error',-->
-<!--        })-->
-<!--      }-->
-<!--    }-->
-<!--  })-->
-<!--}-->
-
-
-<!--// 解决ERROR ResizeObserver loop completed with undelivered notifications.-->
-
-<!--//问题的-->
-
-<!--const debounce = (fn, delay) => {-->
-
-<!--  let timer = null;-->
-
-<!--  return function () {-->
-
-<!--    let context = this;-->
-
-<!--    let args = arguments;-->
-
-<!--    clearTimeout(timer);-->
-
-<!--    timer = setTimeout(function () {-->
-
-<!--      fn.apply(context, args);-->
-
-<!--    }, delay);-->
-
-<!--  }-->
-
-<!--}-->
-
-<!--// 解决ERROR ResizeObserver loop completed with undelivered notifications.-->
-
-<!--//问题的-->
-
-<!--const _ResizeObserver = window.ResizeObserver;-->
-
-<!--window.ResizeObserver = class ResizeObserver extends _ResizeObserver {-->
-
-<!--  constructor(callback) {-->
-
-<!--    callback = debounce(callback, 16);-->
-
-<!--    super(callback);-->
-
-<!--  }-->
-
-<!--}-->
-
-
-
-
-
-<!--onMounted(() => {-->
-<!--  console.log("hello")-->
-
-<!--  axios.post('/task/queryTaskList', user.value).then(resp => {-->
-<!--    console.log(resp)-->
-<!--    if (resp) {-->
-<!--      if (resp.data.success) {-->
-
-<!--        let tasks = resp.data.content;-->
-
-<!--        for (var i = 0; i < tasks.length; i++) {-->
-<!--          let taskType = ''-->
-
-<!--          if(tasks[i].type == 1){-->
-<!--            taskType = '问答题'-->
-<!--          }else {-->
-<!--            taskType = '论述题'-->
-<!--          }-->
-
-<!--          let temp = {-->
-<!--            id:tasks[i].id,-->
-<!--            deadline: tasks[i].deadline.substring(0,10),-->
-<!--            name: tasks[i].name,-->
-<!--            totalScore: tasks[i].totalScore,-->
-<!--            type: taskType,-->
-<!--          }-->
-<!--          tableData.value.push(temp)-->
-<!--        }-->
-<!--      }-->
-<!--    }-->
-
-<!--  })-->
-<!--})-->
-
-<!--</script>-->
-
-
-<!--<style>-->
-
-<!--.text {-->
-<!--  font-size: 14px;-->
-<!--}-->
-
-<!--.item {-->
-<!--  margin-bottom: 18px;-->
-<!--}-->
-
-<!--.clearfix:before,-->
-<!--.clearfix:after {-->
-<!--  display: table;-->
-<!--  content: "";-->
-<!--}-->
-
-<!--.clearfix:after {-->
-<!--  clear: both-->
-<!--}-->
-
-<!--.box-card {-->
-<!--  width: 480px;-->
-<!--}-->
-
-<!--</style>-->
-
 <template>
-  <div>
-      任务审批
-      {{user}}
+  <div style="padding-left: 5%">
+
+    <el-card style="width: 100%;margin-top: 5%;margin-left: 5%">
+      <span>回答列表</span>
+      <el-radio-group style="margin-left: 20px" v-model="tableStatus" class="ml-4">
+        <el-radio :label="2" size="large">待审批</el-radio>
+        <el-radio :label="3" size="large">已审批</el-radio>
+      </el-radio-group>
+      <!--        {{children}}-->
+      <el-table style="margin-top: 20px" :data="tableDataSource" border>
+        <el-table-column fixed prop="writer" label="作答者" width="220"/>
+        <el-table-column prop="task.name" label="任务标题" width="150"/>
+        <el-table-column prop="task.totalScore" label="任务总分" width="150"/>
+        <el-table-column label="任务状态" width="200">
+          <template #default="scope">
+                        <span>
+                             <template v-if="scope.row.answerStatus===2">
+                                未审批
+                            </template>
+                             <template v-if="scope.row.answerStatus===3">
+                                已审批
+                            </template>
+                        </span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="Operations" width="200">
+          <template #default="scope">
+            <template v-if="scope.row.answerStatus===2">
+              <el-button link type="primary" size="small" @click="openDrawer(scope.row,false)">
+                审批回答
+              </el-button>
+            </template>
+            <template v-else>
+              <span>不可查看</span>
+            </template>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+
+    <el-drawer v-model="drawer" direction="rtl" :before-close="handleCloseDrawer" :modal="true"
+               :close-on-click-modal="false">
+      <template #header>
+        <div>
+          <h2>标题：{{ currentAnswer.task.name }}</h2>
+        </div>
+        <div style="clear: both">
+          <p>{{currentAnswer.task.description}}</p>
+        </div>
+      </template>
+      <template #default>
+        <div>
+          <p>
+            {{ '答题者：' + currentAnswer.writer}}
+          </p>
+          <p>
+            {{'总分： '+ currentAnswer.task.totalScore}}
+          </p>
+          <p v-html=" '具体作答：<br/>'+currentAnswer.answerContent"
+             style="margin-top: 50px;margin-bottom: 50px">
+          </p>
+        </div>
+      </template>
+      <template #footer>
+        <div style="flex: auto">
+          <el-label style="margin-right: 10px">得分</el-label>
+          <el-input-number v-model="currentScore" controls-position="right" :min="1"
+                           :max="100" style="margin-right: 80px" @change="currentScoreChange"></el-input-number>
+          <el-button @click="handleCloseDrawer">取消</el-button>
+          <el-button type="primary" @click="submitEdit()" style="margin-left: 10px">提交</el-button>
+        </div>
+      </template>
+    </el-drawer>
   </div>
 </template>
+
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref,watch} from "vue";
 import store from "@/store";
+import axios from "axios";
+import {ElMessage,ElMessageBox} from "element-plus";
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+//import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 
 const user = ref(store.state.loginUser)
 
+const answerList = ref([])
+
+const tableStatus = ref(2)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
+const tableDataSource = ref([])
+
+//wang editor配置
+// 编辑器实例，必须用 shallowRef
+// const editorRef = shallowRef()
+// const toolbarConfig = {}
+
+// 组件销毁时，也及时销毁编辑器
+// onBeforeUnmount(() => {
+//   const editor = editorRef.value
+//   if (editor == null) return
+//   editor.destroy()
+// })
+
+// const handleCreated = (editor) => {
+//   editorRef.value = editor // 记录 editor 实例，重要！
+// }
+//wang editor配置
+
+function getAnswersByVolunteerId() {
+  axios.post('/answer/queryAnswerListByVolunteerId/',{volunteerId:user.value.id})
+      .then(resp => {
+        if (resp) {
+          if (resp.data.success) {
+            answerList.value = resp.data.content
+            completeAnswerList()
+            updateDataSource()
+          } else {
+            ElMessage({
+              message: '查找志愿者审批回答列表失败：' + resp.data.message,
+              type: 'error',
+            })
+          }
+        }
+      })
+}
+
+
+
+const currentAnswer = ref({task:{}})//当前选中
+const drawEditable = ref(false)//抽屉中的内容是否可以编辑
+const drawer = ref(false)//抽屉的可见性
+const currentScore = ref(0)//当前分数
+
+/**
+ * 关闭抽屉的回调
+ */
+// function handleCloseDrawer() {
+//    editorRef.value.setHtml('')
+//   if (editorRef.value){
+//     editorRef.value.clear()
+//     console.log(editorRef.value)
+//   }
+//   currentAnswer.value = {task: {}}
+//   drawEditable.value = false
+//   drawer.value = false
+// }
+
+function openDrawer(Answer, editAble) {
+  drawEditable.value = editAble
+  currentAnswer.value = Answer
+  console.log(currentAnswer.value)
+  if (!currentAnswer.value.answerContent){
+    currentAnswer.value.answerContent = ''
+  }
+  drawer.value = true
+}
+function handleCloseDrawer() {
+  currentAnswer.value = {task: {}}
+  currentScore.value = 0
+  drawEditable.value = false
+  drawer.value = false
+}
+
+
+
+const currentScoreChange=(score)=>{
+  currentScore.value = score
+}
+
+function submitEdit(){
+
+  ElMessageBox.confirm(`确认要提交你的打分吗？`)
+      .then(() => {
+        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore.value})
+            .then(resp => {
+              const data = resp.data
+              if (data) {
+                if (data.success) {
+                  ElMessage({
+                    message: resp.data.message,
+                    type: 'success',
+                  })
+                  handleCloseDrawer()
+                  location.reload()
+                } else {
+                  ElMessage({
+                    message: resp.data.message,
+                    type: 'error',
+                  })
+                }
+              }
+            })
+      }).catch(() => {
+    // catch error
+  })
+}
+
+function completeAnswerList(){
+  for(let answer of answerList.value){
+    axios.post('task/getTaskByAnswer',answer).then(resp=>{
+      if(resp){
+        answer.task = resp.data.content[0]
+      }else{
+        ElMessage({
+          message:'获取任务失败',
+          type: 'error'
+        })
+      }
+    })
+
+    axios.post('user/getChildByAnswer',answer).then(resp=>{
+      if(resp){
+        answer.writer = resp.data.content[0].name
+      }else{
+        ElMessage({
+          message:'获取用户失败',
+          type:'error'
+        })
+      }
+    })
+  }
+}
+
+
+watch(() => tableStatus.value, () => {
+  updateDataSource()
+})
+
+function updateDataSource(){
+  if (tableStatus.value === 2) {
+    tableDataSource.value = []
+    for (let a of answerList.value) {
+      if (a.answerStatus === 2) {
+        tableDataSource.value.push(Object.assign(a))
+      }
+    }
+  } else {
+    tableDataSource.value = []
+    for (let a of answerList.value) {
+      console.log(a.answerStatus)
+      if (a.answerStatus === 3) {
+        tableDataSource.value.push(Object.assign(a))
+      }
+    }
+  }
+}
+
+onMounted(() => {
+  getAnswersByVolunteerId()
+})
 </script>
-<style scoped></style>
+
+<style scoped>
+
+</style>

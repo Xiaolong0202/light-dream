@@ -2,6 +2,9 @@ package com.dream.backend.service;
 
 import com.dream.backend.domain.Answer;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dream.backend.domain.User;
+
+import java.util.List;
 
 /**
 * @author 13430
@@ -11,5 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface AnswerService {
 
     public int addAnswer(Answer answer);
+
+    public List<Answer> queryAnswerList(Answer answer);
+
+    int modifyAnswer(Answer answer);
 
 }

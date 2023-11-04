@@ -3,10 +3,13 @@ package com.dream.backend.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dream.backend.domain.Answer;
+import com.dream.backend.domain.User;
 import com.dream.backend.service.AnswerService;
 import com.dream.backend.mapper.AnswerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author 13430
@@ -27,6 +30,17 @@ public class AnswerServiceImpl implements AnswerService{
         } else {
             return answerResult;
         }
+    }
+
+    public List<Answer> queryAnswerList(Answer answer){
+        List<Answer> result = answerMapper.queryAnswerList(answer);
+        return result;
+    }
+
+    @Override
+    public int modifyAnswer(Answer answer){
+        int result = answerMapper.updateAnswerSelective(answer);
+        return  result;
     }
 
 }

@@ -23,20 +23,19 @@ import java.util.regex.Pattern;
 public class TaskController {
 
     @Autowired
-    private TaskServiceImpl taskServiceImpl;
+    private TaskServiceImpl taskService;
 
     @Autowired
     private AnswerServiceImpl answerService;
 
     @RequestMapping(value = "/queryTaskList", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<List<Task>> queryTaskList(@RequestBody User user){
-        System.out.println(user.toString());
         CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
         Task task = new Task();
         task.setVolunteerId(user.getId());
         task.setIsdelete(0);
         try{
-            List<Task> hasTask = taskServiceImpl.queryTaskList(task);
+            List<Task> hasTask = taskService.queryTaskList(task);
             if (CollectionUtils.isEmpty(hasTask)) {
                 commonResp.setSuccess(false);
                 commonResp.setContent(null);
@@ -58,7 +57,7 @@ public class TaskController {
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
         System.out.print(task);
         try{
-            int result = taskServiceImpl.addTask(task);
+            int result = taskService.addTask(task);
             if (result != 0) {
                 commonResp.setSuccess(true);
                 commonResp.setContent(1);
@@ -79,7 +78,7 @@ public class TaskController {
     public CommonResp<Integer> deleteTaskById(@RequestBody Task task){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
         try {
-            int result = taskServiceImpl.deleteTaskById(task);
+            int result = taskService.deleteTaskById(task);
             if (result != 0){
                 commonResp.setSuccess(true);
                 commonResp.setContent(1);
@@ -142,6 +141,29 @@ public class TaskController {
 
         return commonResp;
 
+    }
+
+    @RequestMapping(value = "/getTaskByAnswer", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<Task>> getTaskByAnswer(@RequestBody Answer answer){
+        Task task = new Task();
+        task.setId(answer.getTaskId());
+        CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
+        try{
+            List<Task> hasTask = taskService.queryTaskList(task);
+            if (CollectionUtils.isEmpty(hasTask)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasTask);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
     }
 
 

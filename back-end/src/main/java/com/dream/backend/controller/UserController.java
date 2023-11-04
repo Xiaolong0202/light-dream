@@ -1,10 +1,13 @@
 package com.dream.backend.controller;
 
+import com.dream.backend.domain.Answer;
+import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
 import com.dream.backend.resp.PageResp;
 import com.dream.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -90,5 +93,72 @@ public class UserController {
         userService.disBindChild(childId);
         return CommonResp.buildSuccess("解绑成功");
     }
+
+    @RequestMapping(value = "/queryAllUser", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<User>> queryAllUser(){
+        User user = new User();
+        CommonResp<List<User>> commonResp = new CommonResp<List<User>>();
+        try{
+            List<User> hasUser = userService.queryAllUser(user);
+            if (CollectionUtils.isEmpty(hasUser)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasUser);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
+
+    @RequestMapping(value = "/modifyUser", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<Integer> modifyUser(@RequestBody User user){
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+        try{
+            int result = userService.modifyUser(user);
+            if (result != 0){
+                commonResp.setSuccess(true);
+                commonResp.setContent(result);
+                commonResp.setMessage("修改成功");
+            }else {
+                commonResp.setSuccess(false);
+                commonResp.setContent(0);
+                commonResp.setMessage("修改失败");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
+
+    @RequestMapping(value = "/getChildByAnswer", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<User>> getChildByAnswer(@RequestBody Answer answer){
+        User child = new User();
+        child.setId(answer.getChildUserId());
+        CommonResp<List<User>> commonResp = new CommonResp<List<User>>();
+        try{
+            List<User> hasUser = userService.queryUserList(child);
+            if (CollectionUtils.isEmpty(hasUser)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasUser);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
+
 
 }

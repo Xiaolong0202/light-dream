@@ -1,10 +1,13 @@
 package com.dream.backend.mapper;
 
+import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
 * @author 13430
@@ -21,6 +24,14 @@ public interface UserMapper extends BaseMapper<User> {
      */
     @Update("update dreams.user set volunteer_id = null where id = #{childId}")
     void disBindChild(@Param("childId") Long childId);
+
+    List<User> queryUserList(User user);
+
+    List<User> queryAllUser(User user);
+
+    int updateUserSelective(User user);
+
+
 }
 
 
