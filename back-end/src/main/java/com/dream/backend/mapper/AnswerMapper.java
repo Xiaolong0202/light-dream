@@ -19,6 +19,8 @@ public interface AnswerMapper extends BaseMapper<Answer> {
 
     List<Answer> queryAnswerList(Answer answer);
 
+    int updateAnswerSelective(Answer answer);
+
 }
 
 
