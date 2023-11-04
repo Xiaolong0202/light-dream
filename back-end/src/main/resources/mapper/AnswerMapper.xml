@@ -30,7 +30,7 @@
             AND task_id = #{taskId,jdbcType=BIGINT}
         </if>
         <if test="answerStatus != null">
-            AND answer_status = #{answerStatus,jdbcType=BIGINT}
+            AND answer_status > 1
         </if>
     </select>
 
@@ -50,7 +50,7 @@
                 comments = #{comments,jdbcType=VARCHAR},
             </if>
             <if test="answerStatus != null">
-                answer_status = #{answerStatus,jdbcType=TINYINT},
+                answer_status = #{answerStatus,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}

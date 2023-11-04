@@ -32,7 +32,7 @@
               </el-button>
             </template>
             <template v-else>
-              <span>查看</span>
+              <span>不可查看</span>
             </template>
           </template>
         </el-table-column>
@@ -69,7 +69,7 @@
           <el-input-number v-model="currentScore" controls-position="right" :min="1"
                            :max="100" style="margin-right: 80px" @change="currentScoreChange"></el-input-number>
           <el-button @click="handleCloseDrawer">取消</el-button>
-          <el-button :disabled="!drawEditable" type="primary" @click="submitEdit()">提交</el-button>
+          <el-button type="primary" @click="submitEdit()" style="margin-left: 10px">提交</el-button>
         </div>
       </template>
     </el-drawer>
@@ -88,7 +88,7 @@ const user = ref(store.state.loginUser)
 
 const answerList = ref([])
 
-const tableStatus = ref(1)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
+const tableStatus = ref(2)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
 const tableDataSource = ref([])
 
 //wang editor配置
@@ -113,7 +113,6 @@ function getAnswersByVolunteerId() {
       .then(resp => {
         if (resp) {
           if (resp.data.success) {
-            ElMessage({message:'获取审批回答列表成功'})
             answerList.value = resp.data.content
             completeAnswerList()
             updateDataSource()
@@ -129,7 +128,7 @@ function getAnswersByVolunteerId() {
 
 
 
-const currentAnswer = ref({task: {}})//当前选中
+const currentAnswer = ref({task:{}})//当前选中
 const drawEditable = ref(false)//抽屉中的内容是否可以编辑
 const drawer = ref(false)//抽屉的可见性
 const currentScore = ref(0)//当前分数
@@ -150,14 +149,15 @@ const currentScore = ref(0)//当前分数
 
 function openDrawer(Answer, editAble) {
   drawEditable.value = editAble
-  currentAnswer.value = Object.assign(Answer)
+  currentAnswer.value = Answer
+  console.log(currentAnswer.value)
   if (!currentAnswer.value.answerContent){
     currentAnswer.value.answerContent = ''
   }
   drawer.value = true
 }
 function handleCloseDrawer() {
-  currentAnswer.value = {}
+  currentAnswer.value = {task: {}}
   currentScore.value = 0
   drawEditable.value = false
   drawer.value = false
@@ -171,9 +171,9 @@ const currentScoreChange=(score)=>{
 
 function submitEdit(){
 
-  ElMessageBox.confirm(`确认要提交你的审批吗？`)
+  ElMessageBox.confirm(`确认要提交你的打分吗？`)
       .then(() => {
-        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore})
+        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore.value})
             .then(resp => {
               const data = resp.data
               if (data) {
@@ -182,7 +182,8 @@ function submitEdit(){
                     message: resp.data.message,
                     type: 'success',
                   })
-                  drawer.value = false
+                  handleCloseDrawer()
+                  location.reload()
                 } else {
                   ElMessage({
                     message: resp.data.message,
@@ -231,14 +232,15 @@ function updateDataSource(){
   if (tableStatus.value === 2) {
     tableDataSource.value = []
     for (let a of answerList.value) {
-      if (a.answerStatus == 2) {
+      if (a.answerStatus === 2) {
         tableDataSource.value.push(Object.assign(a))
       }
     }
   } else {
     tableDataSource.value = []
     for (let a of answerList.value) {
-      if (a.answerStatus == 3) {
+      console.log(a.answerStatus)
+      if (a.answerStatus === 3) {
         tableDataSource.value.push(Object.assign(a))
       }
     }
