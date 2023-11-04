@@ -30,7 +30,7 @@
             AND task_id = #{taskId,jdbcType=BIGINT}
         </if>
         <if test="answerStatus != null">
-            AND answer_status = #{answerStatus,jdbcType=TINYINT}
+            AND answer_status = #{answerStatus,jdbcType=BIGINT}
         </if>
     </select>
 

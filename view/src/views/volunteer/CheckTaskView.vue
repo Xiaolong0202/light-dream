@@ -125,17 +125,13 @@ const tableDataSource = ref([])
 //wang editor配置
 
 function getAnswersByVolunteerId() {
-  console.log('查找回答')
-
   axios.post('/answer/queryAnswerListByVolunteerId/',{volunteerId:user.value.id})
       .then(resp => {
         if (resp) {
           if (resp.data.success) {
-            ElMessage({message:'1111111'})
-            console.log(resp.data.content)
-            //answerList.value = resp.data.content
-            //console.log(answerList.value)
-            //模拟变化,触发监听事件
+            ElMessage({message:'获取审批回答列表成功'})
+            answerList.value = resp.data.content
+            completeAnswerList()
             updateDataSource()
           } else {
             ElMessage({
@@ -205,9 +201,49 @@ function submitEdit(){
   })
 }
 
+function completeAnswerList(){
+  console.log(answerList.value)
+  for(let answer of answerList.value){
+    console.log(answer.answerContent)
+    let tasktemp = {}
+    let childtemp = {}
+    let taskId = answer.taskId
+    let childId = answer.childUserId
+    console.log(taskId)
+    console.log(childId)
+    axios.post('task/queryTaskList',{id:taskId}).then(resp=>{
+      if(resp){
+        tasktemp = resp.data.content
+        console.log(tasktemp)
+        //answer.task = tasktemp
+      }else{
+        ElMessage({
+          message:'获取任务失败',
+          type: 'error'
+        })
+      }
+    })
+
+    // axios.post('user/queryUserList',{id:childId}).then(resp=>{
+    //   if(resp){
+    //     childtemp =resp.data.cotent
+    //     console.log(childtemp)
+    //     //answer.writer = childtemp.name
+    //   }else{
+    //     ElMessage({
+    //       message:'获取用户失败',
+    //       type:'error'
+    //     })
+    //   }
+    // })
+  }
+}
+
+
 watch(() => tableStatus.value, () => {
   updateDataSource()
 })
+
 function updateDataSource(){
   if (tableStatus.value === 2) {
     tableDataSource.value = []
@@ -227,7 +263,6 @@ function updateDataSource(){
 }
 
 onMounted(() => {
-  console.log(user.value)
   getAnswersByVolunteerId()
 })
 </script>

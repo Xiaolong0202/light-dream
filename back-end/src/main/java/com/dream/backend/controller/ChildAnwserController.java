@@ -96,7 +96,7 @@ public class ChildAnwserController {
         for(User child:children){
             Answer answer = new Answer();
             answer.setChildUserId(child.getId());
-            answer.setAnswerStatus(1);
+            answer.setAnswerStatus(2);
             answers.addAll(answerService.queryAnswerList(answer));
         }
 
