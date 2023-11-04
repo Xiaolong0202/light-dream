@@ -9,7 +9,7 @@
       </el-radio-group>
       <!--        {{children}}-->
       <el-table style="margin-top: 20px" :data="tableDataSource" border>
-        <el-table-column fixed prop="child" label="作答者" width="220"/>
+        <el-table-column fixed prop="writer" label="作答者" width="220"/>
         <el-table-column prop="task.name" label="任务标题" width="150"/>
         <el-table-column prop="task.totalScore" label="任务总分" width="150"/>
         <el-table-column label="任务状态" width="200">
@@ -53,38 +53,22 @@
       <template #default>
         <div>
           <p>
-            {{ '回答人：' + currentAnswer.child}}
+            {{ '答题者：' + currentAnswer.writer}}
           </p>
           <p>
             {{'总分： '+ currentAnswer.task.totalScore}}
           </p>
-          <p v-html=" '作答内容：<br/>'+currentAnswer.answerContent"
+          <p v-html=" '具体作答：<br/>'+currentAnswer.answerContent"
              style="margin-top: 50px;margin-bottom: 50px">
           </p>
-<!--          <div v-else style="border: 1px solid #ccc">-->
-<!--            <Toolbar-->
-<!--                style="border-bottom: 1px solid #ccc"-->
-<!--                :editor="editorRef"-->
-<!--                :defaultConfig="toolbarConfig"-->
-<!--                mode="default"-->
-<!--            />-->
-<!--            <Editor-->
-<!--                style="height: 500px; overflow-y: hidden;"-->
-<!--                v-model="currentAnswer.answerContent"-->
-<!--                :defaultConfig="editorConfig"-->
-<!--                mode="default"-->
-<!--                @onCreated="handleCreated"-->
-<!--            />-->
-<!--          </div>-->
         </div>
       </template>
       <template #footer>
         <div style="flex: auto">
           <el-label style="margin-right: 10px">得分</el-label>
           <el-input-number v-model="currentScore" controls-position="right" :min="1"
-                           :max="100" style="margin-right: 80px"></el-input-number>
+                           :max="100" style="margin-right: 80px" @change="currentScoreChange"></el-input-number>
           <el-button @click="handleCloseDrawer">取消</el-button>
-          <!--          <el-button :disabled="!drawEditable" type="primary" @click="saveEdit()">保存草稿</el-button>-->
           <el-button :disabled="!drawEditable" type="primary" @click="submitEdit()">提交</el-button>
         </div>
       </template>
@@ -172,50 +156,51 @@ function openDrawer(Answer, editAble) {
   }
   drawer.value = true
 }
+function handleCloseDrawer() {
+  currentAnswer.value = {}
+  currentScore.value = 0
+  drawEditable.value = false
+  drawer.value = false
+}
 
+
+
+const currentScoreChange=(score)=>{
+  currentScore.value = score
+}
 
 function submitEdit(){
+
   ElMessageBox.confirm(`确认要提交你的审批吗？`)
       .then(() => {
-        // axios.put('/answer/check',currentAnswer.value,currentScore.value)
-        //     .then(resp => {
-        //       const data = resp.data
-        //       if (data) {
-        //         if (data.success) {
-        //           ElMessage({
-        //             message: resp.data.message,
-        //             type: 'success',
-        //           })
-        //           getAnswersOfTheChild()
-        //           drawer.value = false
-        //         } else {
-        //           ElMessage({
-        //             message: resp.data.message,
-        //             type: 'error',
-        //           })
-        //         }
-        //       }
-        //     })
+        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore})
+            .then(resp => {
+              const data = resp.data
+              if (data) {
+                if (data.success) {
+                  ElMessage({
+                    message: resp.data.message,
+                    type: 'success',
+                  })
+                  drawer.value = false
+                } else {
+                  ElMessage({
+                    message: resp.data.message,
+                    type: 'error',
+                  })
+                }
+              }
+            })
       }).catch(() => {
     // catch error
   })
 }
 
 function completeAnswerList(){
-  console.log(answerList.value)
   for(let answer of answerList.value){
-    console.log(answer.answerContent)
-    let tasktemp = {}
-    let childtemp = {}
-    let taskId = answer.taskId
-    let childId = answer.childUserId
-    console.log(taskId)
-    console.log(childId)
-    axios.post('task/queryTaskList',{id:taskId}).then(resp=>{
+    axios.post('task/getTaskByAnswer',answer).then(resp=>{
       if(resp){
-        tasktemp = resp.data.content
-        console.log(tasktemp)
-        //answer.task = tasktemp
+        answer.task = resp.data.content[0]
       }else{
         ElMessage({
           message:'获取任务失败',
@@ -224,18 +209,16 @@ function completeAnswerList(){
       }
     })
 
-    // axios.post('user/queryUserList',{id:childId}).then(resp=>{
-    //   if(resp){
-    //     childtemp =resp.data.cotent
-    //     console.log(childtemp)
-    //     //answer.writer = childtemp.name
-    //   }else{
-    //     ElMessage({
-    //       message:'获取用户失败',
-    //       type:'error'
-    //     })
-    //   }
-    // })
+    axios.post('user/getChildByAnswer',answer).then(resp=>{
+      if(resp){
+        answer.writer = resp.data.content[0].name
+      }else{
+        ElMessage({
+          message:'获取用户失败',
+          type:'error'
+        })
+      }
+    })
   }
 }
 
