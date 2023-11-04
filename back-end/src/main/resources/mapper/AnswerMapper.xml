@@ -15,6 +15,25 @@
             <result property="comments" column="comments" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <select id="queryAnswerList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Task">
+        SELECT id,child_user_id as "childUserId",task_id as "taskId",answer_status as "answerStatus",
+        answer_content as "answerContent",image_url as "imageUrl",score,comments
+        FROM answer
+        WHERE 1 = 1
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="childUserId != null">
+            AND child_user_id = #{childUserId,jdbcType=BIGINT}
+        </if>
+        <if test="taskId != null">
+            AND task_id = #{taskId,jdbcType=BIGINT}
+        </if>
+        <if test="answerStatus != null">
+            AND answer_status = #{answerStatus,jdbcType=TINYINT}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.dream.backend.domain.Answer">
         insert into answer (id, child_user_id, task_id, answer_status, answer_content, image_url, score, comments)
         values (#{id,jdbcType=BIGINT}, #{childUserId,jdbcType=BIGINT}, #{taskId,jdbcType=BIGINT}, #{answerStatus,jdbcType=TINYINT},

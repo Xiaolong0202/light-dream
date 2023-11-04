@@ -4,13 +4,19 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dream.backend.domain.Answer;
 import com.dream.backend.domain.Task;
+import com.dream.backend.domain.User;
 import com.dream.backend.mapper.AnswerMapper;
 import com.dream.backend.mapper.TaskMapper;
 import com.dream.backend.resp.AnwserResp;
 import com.dream.backend.resp.CommonResp;
+import com.dream.backend.service.impl.AnswerServiceImpl;
+import com.dream.backend.service.impl.TaskServiceImpl;
+import com.dream.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,6 +37,15 @@ public class ChildAnwserController {
 
     @Autowired
     TaskMapper taskMapper;
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
+    private TaskServiceImpl taskService;
+
+    @Autowired
+    private AnswerServiceImpl answerService;
 
     /**
      * 查询一个孩子所有的anwser
@@ -73,5 +88,37 @@ public class ChildAnwserController {
         answerMapper.updateById(answer);
         return CommonResp.buildSuccess("任务提交成功");
     }
+
+    @RequestMapping(value = "/queryAnswerListByVolunteerId", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<Answer>> queryAnswerListByVolunteerId(@RequestBody User user){
+        List<User> children = userService.queryUserList(user);
+        List<Answer> answers = new ArrayList<Answer>();
+        for(User child:children){
+            Answer answer = new Answer();
+            answer.setChildUserId(child.getId());
+            answer.setAnswerStatus(1);
+            answers.addAll(answerService.queryAnswerList(answer));
+        }
+
+        CommonResp<List<Answer>> commonResp = new CommonResp<List<Answer>>();
+        try {
+            if (CollectionUtils.isEmpty(answers)){
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else {
+                commonResp.setSuccess(true);
+                commonResp.setContent(answers);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+
+    }
+
+
 
 }

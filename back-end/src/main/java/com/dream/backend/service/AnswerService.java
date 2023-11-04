@@ -3,6 +3,8 @@ package com.dream.backend.service;
 import com.dream.backend.domain.Answer;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 13430
 * @description 针对表【answer】的数据库操作Service
@@ -11,5 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface AnswerService {
 
     public int addAnswer(Answer answer);
+
+    public List<Answer> queryAnswerList(Answer answer);
 
 }

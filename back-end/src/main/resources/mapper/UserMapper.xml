@@ -14,9 +14,59 @@
             <result property="score" column="score" jdbcType="INTEGER"/>
     </resultMap>
 
+    <select id="queryUserList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.User">
+        SELECT id,password,volunteer_id as "volunteerId",phone,name,user_type as "userType",score
+        FROM user
+        WHERE 1 = 1
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="volunteerId != null">
+            AND volunteer_id = #{volunteerId,jdbcType=BIGINT}
+        </if>
+        <if test="phone != null and phone != ''">
+            AND phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name != ''">
+            AND name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="userType != null">
+            AND user_type = #{userType,jdbcType=TINYINT}
+        </if>
+    </select>
+
+    <select id="queryAllUser" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.User">
+        SELECT id,password,volunteer_id as "volunteerId",phone,name,user_type as "userType",score
+        FROM user
+        WHERE 1 = 1
+    </select>
+
+    <update id="updateUserSelective" parameterType="com.dream.backend.domain.User">
+        update user
+        <set>
+            <if test="password != null and password != ''">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="volunteerId != null">
+                volunteer_id = #{volunteerId,jdbcType=BIGINT},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
     <sql id="Base_Column_List">
         id,password,volunteer_id,
         phone,name,user_type,
         score
     </sql>
+
 </mapper>
