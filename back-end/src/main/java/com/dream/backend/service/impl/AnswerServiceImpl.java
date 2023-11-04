@@ -8,6 +8,8 @@ import com.dream.backend.mapper.AnswerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
 * @author 13430
 * @description 针对表【answer】的数据库操作Service实现
@@ -27,6 +29,11 @@ public class AnswerServiceImpl implements AnswerService{
         } else {
             return answerResult;
         }
+    }
+
+    public List<Answer> queryAnswerList(Answer answer){
+        List<Answer> result = answerMapper.queryAnswerList(answer);
+        return result;
     }
 
 }

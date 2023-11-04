@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class TaskController {
 
     @Autowired
-    private TaskServiceImpl taskServiceImpl;
+    private TaskServiceImpl taskService;
 
     @Autowired
     private AnswerServiceImpl answerService;
@@ -36,7 +36,7 @@ public class TaskController {
         task.setVolunteerId(user.getId());
         task.setIsdelete(0);
         try{
-            List<Task> hasTask = taskServiceImpl.queryTaskList(task);
+            List<Task> hasTask = taskService.queryTaskList(task);
             if (CollectionUtils.isEmpty(hasTask)) {
                 commonResp.setSuccess(false);
                 commonResp.setContent(null);
@@ -58,7 +58,7 @@ public class TaskController {
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
         System.out.print(task);
         try{
-            int result = taskServiceImpl.addTask(task);
+            int result = taskService.addTask(task);
             if (result != 0) {
                 commonResp.setSuccess(true);
                 commonResp.setContent(1);
@@ -79,7 +79,7 @@ public class TaskController {
     public CommonResp<Integer> deleteTaskById(@RequestBody Task task){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
         try {
-            int result = taskServiceImpl.deleteTaskById(task);
+            int result = taskService.deleteTaskById(task);
             if (result != 0){
                 commonResp.setSuccess(true);
                 commonResp.setContent(1);
