@@ -9,7 +9,7 @@
         <el-table :data="tableData" style="margin-top: 20px" border>
           <el-table-column fixed prop="name" label="用户姓名" width="200">
           </el-table-column>
-          <el-table-column prop="account" label="用户账号" width="200">
+          <el-table-column prop="phone" label="用户账号" width="200">
           </el-table-column>
           <el-table-column prop="password" label="用户密码" width="200">
           </el-table-column>
@@ -19,8 +19,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="223">
             <template #default="scope">
-              <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
-              <el-button @click="bind(scope.row)" type="text" size="small">绑定</el-button>
+              <el-button @click="modify(scope.row)" type="info" size="small">查看/修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -28,60 +27,83 @@
     </el-card>
   </div>
 
-
   <el-dialog
-      v-model="checkboxVisible1"
-      title="修改用户信息"
-      width="50%"
+      v-model="checkboxVisible"
+      title="用户信息"
+      width="30%"
       @close="closeDialog">
 
-    在这里显示用户的个人信息并修改
+    <el-form :model="userToModify" :disabled="disEditable" label-width="80px" style="margin-right: 20px" >
+      <el-form-item label="姓名">
+        <el-input v-model="userToModify.name"/>
+      </el-form-item>
+      <el-form-item label="账号">
+        <el-input v-model="userToModify.phone"/>
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input show-password v-model="userToModify.password"/>
+      </el-form-item>
+    </el-form>
 
     <div style="text-align: center;margin-top: 20px">
-      <el-button type="primary" @click="modifySend">确定</el-button>
-      <el-button type="primary" @click="checkboxVisible1=false">取消</el-button>
+      <el-button v-if="disEditable" type="primary" @click="modifyConsent">修改</el-button>
+      <el-button v-if="!disEditable" type="primary" @click="modifySend">保存</el-button>
+      <el-button type="primary" @click="checkboxVisible=false">取消</el-button>
     </div>
   </el-dialog>
 
-  <el-dialog
-      v-model="checkboxVisible2"
-      title="绑定儿童"
-      width="50%"
-      @close="closeDialog">
-
-    在这里显示儿童列表
-
-    <div style="text-align: center;margin-top: 20px">
-      <el-button type="primary" @click="bindSend">确定</el-button>
-      <el-button type="primary" @click="checkboxVisible2=false">取消</el-button>
-    </div>
-  </el-dialog>
 
 
 </template>
 
 <script setup>
 import {onMounted, ref} from "vue";
+import {ElMessage} from "element-plus";
 import axios from "axios";
 
 const tableData = ref([])
 const userToModify = ref([])
-const userToBind = ref([])
-const checkboxVisible1 = ref(false)
-const checkboxVisible2 = ref(false)
+const checkboxVisible = ref(false)
+const disEditable = ref(true)
 
 /*对应修改填写框*/
 const modify = (userModify) => {
-  checkboxVisible1.value = true
+  checkboxVisible.value = true
   userToModify.value = userModify
 }
+const modifyConsent=()=>{
+  disEditable.value = false
+}
+const modifySend=()=>{
+  if(userToModify.value.userType == "儿童"){
+    userToModify.value.userType = 1
+  }else if(userToModify.value.userType == "志愿者"){
+    userToModify.value.userType = 2
+  }else{
+    userToModify.value.userType = 3
+  }
 
-/*对应志愿者绑定儿童框*/
-const bind = (userBind) => {
-  checkboxVisible2.value = true
-  userToBind.value = userBind
+  axios.post('user/modifyUser',userToModify.value).then(resp=>{
+    if(resp){
+      if(resp.data.success){
+        userToModify.value = ref({})
+        disEditable.value = true
+        checkboxVisible.value = false
+        ElMessage({
+          message: '修改成功：' + resp.data.message,
+        })
+      }else{
+        ElMessage({
+          message: '修改失败：' + resp.data.message,
+          type: 'error',
+        })
+      }
+    }
+  })
 }
 
+/*
+* 加载*/
 onMounted(() => {
   axios.post('/user/queryAllUser').then(resp => {
     console.log(resp)
@@ -101,11 +123,13 @@ onMounted(() => {
             userType = '管理者'
           }
           let temp = {
+            id:users[i].id,
             name:users[i].name,
-            account: users[i].phone,
+            phone: users[i].phone,
             password: users[i].password,
             userType: userType,
-            score:users[i].score
+            score:users[i].score,
+            volunteerId:users[i].volunteerId
           }
           tableData.value.push(temp)
         }
@@ -161,14 +185,6 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 </script>
 
 <style scoped>
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
 
 .clearfix:before,
 .clearfix:after {

@@ -11,6 +11,7 @@ import VolunteerChatView from "@/views/volunteer/VolunteerChatView.vue";
 import AdminView from "@/views/AdminView.vue";
 import ManageTask from "@/views/admin/ManageTask.vue";
 import ManageUser from "@/views/admin/ManageUser.vue";
+import ManageVolunteer from "@/views/admin/ManageVolunteer.vue";
 
 const routes = [
     {
@@ -55,6 +56,10 @@ const routes = [
             {
                 path: 'manageUser',
                 component: ManageUser
+            },
+            {
+                path: 'manageVolunteer',
+                component: ManageVolunteer
             }
         ]
     }

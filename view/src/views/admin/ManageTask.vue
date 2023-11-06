@@ -71,11 +71,11 @@
           type="selection"
           width="55">
       </el-table-column>
-      <el-table-column fixed prop="id" label="id" width="300">
+      <el-table-column prop="name" label="名字" width="234">
       </el-table-column>
-      <el-table-column prop="name" label="名字" width="200">
+      <el-table-column prop="password" label="所属志愿者" width="234">
       </el-table-column>
-      <el-table-column prop="phone" label="任电话务总分" width="200">
+      <el-table-column prop="score" label="分数" width="234">
       </el-table-column>
     </el-table>
     <div style="text-align: center;margin-top: 20px">
@@ -271,6 +271,7 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 /*
 * 加载*/
 onMounted(() => {
+
   axios.post('/task/queryTaskList', user.value).then(resp => {
     console.log(resp)
     if (resp) {
