@@ -82,7 +82,6 @@
       <el-button type="primary" @click="taskSend">确定</el-button>
       <el-button type="primary" @click="checkboxVisible=false">取消</el-button>
     </div>
-
   </el-dialog>
 
 
