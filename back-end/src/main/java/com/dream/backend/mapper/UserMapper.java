@@ -1,6 +1,5 @@
 package com.dream.backend.mapper;
 
-import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,6 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
     int updateUserSelective(User user);
 
 
+    int addScore(User user);
 }
 
 

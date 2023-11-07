@@ -1,6 +1,5 @@
 package com.dream.backend.service;
 
-import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.PageResp;
 import java.util.List;
@@ -31,4 +30,6 @@ public interface UserService {
     List<User> queryAllUser(User user);
 
     int modifyUser(User user);
+
+    int addScore(User user);
 }
