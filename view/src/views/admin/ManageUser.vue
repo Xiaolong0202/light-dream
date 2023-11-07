@@ -102,7 +102,7 @@ const modifySend=()=>{
         disEditable.value = true
         checkboxVisible1.value = false
         ElMessage({
-          message: '修改成功：' + resp.data.message,
+          message: '修改success：' + resp.data.message,
         })
       }else{
         ElMessage({
