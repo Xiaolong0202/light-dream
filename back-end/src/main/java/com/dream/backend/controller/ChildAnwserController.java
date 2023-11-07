@@ -96,7 +96,6 @@ public class ChildAnwserController {
         for(User child:children){
             Answer answer = new Answer();
             answer.setChildUserId(child.getId());
-            answer.setAnswerStatus(1);
             answers.addAll(answerService.queryAnswerList(answer));
         }
 
@@ -125,6 +124,7 @@ public class ChildAnwserController {
     public CommonResp<Integer> evaluateAnswer(@RequestBody Answer answer){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
         try{
+            answer.setAnswerStatus(3);
             int result = answerService.modifyAnswer(answer);
             if (result != 0){
                 commonResp.setSuccess(true);

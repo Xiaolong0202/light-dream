@@ -9,7 +9,7 @@
       </el-radio-group>
       <!--        {{children}}-->
       <el-table style="margin-top: 20px" :data="tableDataSource" border>
-        <el-table-column fixed prop="child" label="作答者" width="220"/>
+        <el-table-column fixed prop="writer" label="作答者" width="220"/>
         <el-table-column prop="task.name" label="任务标题" width="150"/>
         <el-table-column prop="task.totalScore" label="任务总分" width="150"/>
         <el-table-column label="任务状态" width="200">
@@ -32,7 +32,7 @@
               </el-button>
             </template>
             <template v-else>
-              <span>查看</span>
+              <span>不可查看</span>
             </template>
           </template>
         </el-table-column>
@@ -53,39 +53,23 @@
       <template #default>
         <div>
           <p>
-            {{ '回答人：' + currentAnswer.child}}
+            {{ '答题者：' + currentAnswer.writer}}
           </p>
           <p>
             {{'总分： '+ currentAnswer.task.totalScore}}
           </p>
-          <p v-html=" '作答内容：<br/>'+currentAnswer.answerContent"
+          <p v-html=" '具体作答：<br/>'+currentAnswer.answerContent"
              style="margin-top: 50px;margin-bottom: 50px">
           </p>
-<!--          <div v-else style="border: 1px solid #ccc">-->
-<!--            <Toolbar-->
-<!--                style="border-bottom: 1px solid #ccc"-->
-<!--                :editor="editorRef"-->
-<!--                :defaultConfig="toolbarConfig"-->
-<!--                mode="default"-->
-<!--            />-->
-<!--            <Editor-->
-<!--                style="height: 500px; overflow-y: hidden;"-->
-<!--                v-model="currentAnswer.answerContent"-->
-<!--                :defaultConfig="editorConfig"-->
-<!--                mode="default"-->
-<!--                @onCreated="handleCreated"-->
-<!--            />-->
-<!--          </div>-->
         </div>
       </template>
       <template #footer>
         <div style="flex: auto">
           <el-label style="margin-right: 10px">得分</el-label>
           <el-input-number v-model="currentScore" controls-position="right" :min="1"
-                           :max="100" style="margin-right: 80px"></el-input-number>
+                           :max="100" style="margin-right: 80px" @change="currentScoreChange"></el-input-number>
           <el-button @click="handleCloseDrawer">取消</el-button>
-          <!--          <el-button :disabled="!drawEditable" type="primary" @click="saveEdit()">保存草稿</el-button>-->
-          <el-button :disabled="!drawEditable" type="primary" @click="submitEdit()">提交</el-button>
+          <el-button type="primary" @click="submitEdit()" style="margin-left: 10px">提交</el-button>
         </div>
       </template>
     </el-drawer>
@@ -104,7 +88,7 @@ const user = ref(store.state.loginUser)
 
 const answerList = ref([])
 
-const tableStatus = ref(1)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
+const tableStatus = ref(2)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
 const tableDataSource = ref([])
 
 //wang editor配置
@@ -125,17 +109,12 @@ const tableDataSource = ref([])
 //wang editor配置
 
 function getAnswersByVolunteerId() {
-  console.log('查找回答')
-
   axios.post('/answer/queryAnswerListByVolunteerId/',{volunteerId:user.value.id})
       .then(resp => {
         if (resp) {
           if (resp.data.success) {
-            ElMessage({message:'1111111'})
-            console.log(resp.data.content)
-            //answerList.value = resp.data.content
-            //console.log(answerList.value)
-            //模拟变化,触发监听事件
+            answerList.value = resp.data.content
+            completeAnswerList()
             updateDataSource()
           } else {
             ElMessage({
@@ -149,7 +128,7 @@ function getAnswersByVolunteerId() {
 
 
 
-const currentAnswer = ref({task: {}})//当前选中
+const currentAnswer = ref({task:{}})//当前选中
 const drawEditable = ref(false)//抽屉中的内容是否可以编辑
 const drawer = ref(false)//抽屉的可见性
 const currentScore = ref(0)//当前分数
@@ -170,56 +149,98 @@ const currentScore = ref(0)//当前分数
 
 function openDrawer(Answer, editAble) {
   drawEditable.value = editAble
-  currentAnswer.value = Object.assign(Answer)
+  currentAnswer.value = Answer
+  console.log(currentAnswer.value)
   if (!currentAnswer.value.answerContent){
     currentAnswer.value.answerContent = ''
   }
   drawer.value = true
 }
+function handleCloseDrawer() {
+  currentAnswer.value = {task: {}}
+  currentScore.value = 0
+  drawEditable.value = false
+  drawer.value = false
+}
 
+
+
+const currentScoreChange=(score)=>{
+  currentScore.value = score
+}
 
 function submitEdit(){
-  ElMessageBox.confirm(`确认要提交你的审批吗？`)
+
+  ElMessageBox.confirm(`确认要提交你的打分吗？`)
       .then(() => {
-        // axios.put('/answer/check',currentAnswer.value,currentScore.value)
-        //     .then(resp => {
-        //       const data = resp.data
-        //       if (data) {
-        //         if (data.success) {
-        //           ElMessage({
-        //             message: resp.data.message,
-        //             type: 'success',
-        //           })
-        //           getAnswersOfTheChild()
-        //           drawer.value = false
-        //         } else {
-        //           ElMessage({
-        //             message: resp.data.message,
-        //             type: 'error',
-        //           })
-        //         }
-        //       }
-        //     })
+        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore.value})
+            .then(resp => {
+              const data = resp.data
+              if (data) {
+                if (data.success) {
+                  ElMessage({
+                    message: resp.data.message,
+                    type: 'success',
+                  })
+                  handleCloseDrawer()
+                  location.reload()
+                } else {
+                  ElMessage({
+                    message: resp.data.message,
+                    type: 'error',
+                  })
+                }
+              }
+            })
       }).catch(() => {
     // catch error
   })
 }
 
+function completeAnswerList(){
+  for(let answer of answerList.value){
+    axios.post('task/getTaskByAnswer',answer).then(resp=>{
+      if(resp){
+        answer.task = resp.data.content[0]
+      }else{
+        ElMessage({
+          message:'获取任务失败',
+          type: 'error'
+        })
+      }
+    })
+
+    axios.post('user/getChildByAnswer',answer).then(resp=>{
+      if(resp){
+        answer.writer = resp.data.content[0].name
+      }else{
+        ElMessage({
+          message:'获取用户失败',
+          type:'error'
+        })
+      }
+    })
+  }
+}
+
+
 watch(() => tableStatus.value, () => {
   updateDataSource()
 })
+
 function updateDataSource(){
   if (tableStatus.value === 2) {
     tableDataSource.value = []
     for (let a of answerList.value) {
-      if (a.answerStatus == 2) {
+      if (a.answerStatus === 2) {
         tableDataSource.value.push(Object.assign(a))
       }
     }
   } else {
     tableDataSource.value = []
     for (let a of answerList.value) {
-      if (a.answerStatus == 3) {
+      console.log(a.answerStatus)
+      if (a.answerStatus === 3) {
         tableDataSource.value.push(Object.assign(a))
       }
     }
@@ -227,7 +248,6 @@ function updateDataSource(){
 }
 
 onMounted(() => {
-  console.log(user.value)
   getAnswersByVolunteerId()
 })
 </script>
