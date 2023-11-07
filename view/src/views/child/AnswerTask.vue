@@ -20,7 +20,7 @@
                     <template #default="scope">
                         <span>
                              <template v-if="scope.row.answerStatus===3">
-                                scope.row.score
+                                {{scope.row.score}}
                             </template>
                             <template v-else>
                                 ~
@@ -71,10 +71,16 @@
                     <p>
                         {{ '任务描述：' + currentAnswer.task.description }}
                     </p>
-                    <p v-if="currentAnswer.answerStatus > 1" v-html=" '作答内容：<br/>'+currentAnswer.answerContent"
-                       style="margin-top: 50px;margin-bottom: 50px">
-
-                    </p>
+                    <template v-if="currentAnswer.answerStatus > 1">
+                        <p  v-html=" '作答内容：<br/>'+currentAnswer.answerContent"
+                           style="margin-top: 50px;margin-bottom: 50px">
+                        </p>
+                        <template v-if="currentAnswer.answerStatus===3">
+                            <br><br><br><br>
+                            <p>志愿者哥哥姐姐的评语：</p>
+                            <p>{{currentAnswer.comments}}</p>
+                        </template>
+                    </template>
                     <div v-else style="border: 1px solid #ccc">
                         <Toolbar
                                 style="border-bottom: 1px solid #ccc"
