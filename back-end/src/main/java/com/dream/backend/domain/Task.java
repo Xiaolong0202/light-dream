@@ -31,10 +31,10 @@ public class Task implements Serializable {
     private String name;
 
     /**
-     * 志愿者ID
+     * 管理者者ID
      */
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long volunteerId;
+    private Long adminId;
 
     /**
      * 任务描述
@@ -47,12 +47,37 @@ public class Task implements Serializable {
     private Integer totalScore;
 
     /**
-     * 任务截止时间
+     * 任务难度
      */
-    private Date deadline;
+    private String difficulty;
 
     /**
-     * 任务类型（枚举类型暂时还没有确定）
+     * 任务优先级
+     */
+    private String priority;
+
+    /**
+     * 任务预算
+     */
+    private Integer budget;
+
+    /**
+     * 任务开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 任务结束时间
+     */
+    private Date endTime;
+
+    /**
+     * 任务提交形式
+     */
+    private Integer submitForm;
+
+    /**
+     * 任务类型
      */
     private Integer type;
 
@@ -78,10 +103,15 @@ public class Task implements Serializable {
         Task other = (Task) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getVolunteerId() == null ? other.getVolunteerId() == null : this.getVolunteerId().equals(other.getVolunteerId()))
+            && (this.getAdminId() == null ? other.getAdminId() == null : this.getAdminId().equals(other.getAdminId()))
             && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getTotalScore() == null ? other.getTotalScore() == null : this.getTotalScore().equals(other.getTotalScore()))
-            && (this.getDeadline() == null ? other.getDeadline() == null : this.getDeadline().equals(other.getDeadline()))
+            && (this.getDifficulty() == null ? other.getDifficulty() == null : this.getDifficulty().equals(other.getDifficulty()))
+            && (this.getPriority() == null ? other.getPriority() == null : this.getPriority().equals(other.getPriority()))
+            && (this.getBudget() == null ? other.getBudget() == null : this.getBudget().equals(other.getBudget()))
+            && (this.getStartTime() == null ? other.getStartTime() == null : this.getStartTime().equals(other.getStartTime()))
+            && (this.getEndTime() == null ? other.getEndTime() == null : this.getEndTime().equals(other.getEndTime()))
+            && (this.getSubmitForm() == null ? other.getSubmitForm() == null : this.getSubmitForm().equals(other.getSubmitForm()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getIsdelete() == null ? other.getIsdelete() == null : this.getIsdelete().equals(other.getIsdelete()));
     }
@@ -92,10 +122,15 @@ public class Task implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
-        result = prime * result + ((getVolunteerId() == null) ? 0 : getVolunteerId().hashCode());
+        result = prime * result + ((getAdminId() == null) ? 0 : getAdminId().hashCode());
         result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getTotalScore() == null) ? 0 : getTotalScore().hashCode());
-        result = prime * result + ((getDeadline() == null) ? 0 : getDeadline().hashCode());
+        result = prime * result + ((getDifficulty() == null) ? 0 : getDifficulty().hashCode());
+        result = prime * result + ((getPriority() == null) ? 0 : getPriority().hashCode());
+        result = prime * result + ((getBudget() == null) ? 0 : getBudget().hashCode());
+        result = prime * result + ((getStartTime() == null) ? 0 : getStartTime().hashCode());
+        result = prime * result + ((getEndTime() == null) ? 0 : getEndTime().hashCode());
+        result = prime * result + ((getSubmitForm() == null) ? 0 : getSubmitForm().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getIsdelete() == null) ? 0 : getIsdelete().hashCode());
         return result;
@@ -109,10 +144,15 @@ public class Task implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
-        sb.append(", volunteerId=").append(volunteerId);
+        sb.append(", adminId=").append(adminId);
         sb.append(", description=").append(description);
         sb.append(", totalScore=").append(totalScore);
-        sb.append(", deadline=").append(deadline);
+        sb.append(", difficulty=").append(difficulty);
+        sb.append(", priority=").append(priority);
+        sb.append(", budget=").append(budget);
+        sb.append(", startTime=").append(startTime);
+        sb.append(", endTime=").append(endTime);
+        sb.append(", submitForm=").append(submitForm);
         sb.append(", type=").append(type);
         sb.append(", isdelete=").append(isdelete);
         sb.append(", serialVersionUID=").append(serialVersionUID);

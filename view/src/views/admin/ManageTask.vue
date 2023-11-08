@@ -290,7 +290,6 @@ onMounted(() => {
 
           let temp = {
             id: tasks[i].id,
-            deadline: tasks[i].deadline.substring(0, 10),
             name: tasks[i].name,
             totalScore: tasks[i].totalScore,
             type: taskType,
