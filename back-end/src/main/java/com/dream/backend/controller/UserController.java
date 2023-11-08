@@ -195,5 +195,21 @@ public class UserController {
         return CommonResp.buildSuccess("绑定成功");
     }
 
+    @RequestMapping(value = "/addScoreChild", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<?> addScoreChild(@RequestBody User user){
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+        int result =  userService.addScore(user);
+        commonResp.setContent(result);
+        if(result!=0){
+            commonResp.setSuccess(true);
+            commonResp.setMessage("失败");
+        }else{
+            commonResp.setSuccess(false);
+            commonResp.setMessage("成功");
+        }
+        return commonResp;
+    }
+
+
 
 }

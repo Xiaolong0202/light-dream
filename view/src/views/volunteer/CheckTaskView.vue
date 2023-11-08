@@ -9,7 +9,7 @@
       </el-radio-group>
       <!--        {{children}}-->
       <el-table style="margin-top: 20px" :data="tableDataSource" border>
-        <el-table-column fixed prop="writer" label="作答者" width="220"/>
+        <el-table-column fixed prop="writer.name" label="作答者" width="220"/>
         <el-table-column prop="task.name" label="任务标题" width="150"/>
         <el-table-column prop="task.totalScore" label="任务总分" width="150"/>
         <el-table-column label="任务状态" width="200">
@@ -46,28 +46,41 @@
         <div>
           <h2>标题：{{ currentAnswer.task.name }}</h2>
         </div>
-        <div style="clear: both">
-          <p>{{currentAnswer.task.description}}</p>
-        </div>
       </template>
       <template #default>
         <div>
+          <h3>题干：</h3>
           <p>
-            {{ '答题者：' + currentAnswer.writer}}
+            {{currentAnswer.task.description}}
+          </p>
+        </div>
+
+        <div>
+          <hr>
+          <p>
+            {{ '答题者：' + currentAnswer.writer.name}}
           </p>
           <p>
             {{'总分： '+ currentAnswer.task.totalScore}}
           </p>
+          <hr>
           <p v-html=" '具体作答：<br/>'+currentAnswer.answerContent"
-             style="margin-top: 50px;margin-bottom: 50px">
+             style="margin-top: 10px;margin-bottom: 15px">
           </p>
         </div>
       </template>
       <template #footer>
         <div style="flex: auto">
+          <el-input
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="评语"
+              v-model="currentComment"
+              style="margin-bottom: 20px">
+          </el-input>
           <el-label style="margin-right: 10px">得分</el-label>
           <el-input-number v-model="currentScore" controls-position="right" :min="1"
-                           :max="100" style="margin-right: 80px" @change="currentScoreChange"></el-input-number>
+                           :max="currentAnswer.task.totalScore" style="margin-right: 80px" @change="currentScoreChange"></el-input-number>
           <el-button @click="handleCloseDrawer">取消</el-button>
           <el-button type="primary" @click="submitEdit()" style="margin-left: 10px">提交</el-button>
         </div>
@@ -90,23 +103,6 @@ const answerList = ref([])
 
 const tableStatus = ref(2)//1表示展示的是待作答的页面，而2表示的是已经作答或者已经审批
 const tableDataSource = ref([])
-
-//wang editor配置
-// 编辑器实例，必须用 shallowRef
-// const editorRef = shallowRef()
-// const toolbarConfig = {}
-
-// 组件销毁时，也及时销毁编辑器
-// onBeforeUnmount(() => {
-//   const editor = editorRef.value
-//   if (editor == null) return
-//   editor.destroy()
-// })
-
-// const handleCreated = (editor) => {
-//   editorRef.value = editor // 记录 editor 实例，重要！
-// }
-//wang editor配置
 
 function getAnswersByVolunteerId() {
   axios.post('/answer/queryAnswerListByVolunteerId/',{volunteerId:user.value.id})
@@ -132,20 +128,8 @@ const currentAnswer = ref({task:{}})//当前选中
 const drawEditable = ref(false)//抽屉中的内容是否可以编辑
 const drawer = ref(false)//抽屉的可见性
 const currentScore = ref(0)//当前分数
+const currentComment = ref('')
 
-/**
- * 关闭抽屉的回调
- */
-// function handleCloseDrawer() {
-//    editorRef.value.setHtml('')
-//   if (editorRef.value){
-//     editorRef.value.clear()
-//     console.log(editorRef.value)
-//   }
-//   currentAnswer.value = {task: {}}
-//   drawEditable.value = false
-//   drawer.value = false
-// }
 
 function openDrawer(Answer, editAble) {
   drawEditable.value = editAble
@@ -157,10 +141,10 @@ function openDrawer(Answer, editAble) {
   drawer.value = true
 }
 function handleCloseDrawer() {
-  currentAnswer.value = {task: {}}
-  currentScore.value = 0
-  drawEditable.value = false
   drawer.value = false
+  currentScore.value = 0
+  currentComment.value = ''
+  drawEditable.value = false
 }
 
 
@@ -170,28 +154,41 @@ const currentScoreChange=(score)=>{
 }
 
 function submitEdit(){
-
   ElMessageBox.confirm(`确认要提交你的打分吗？`)
       .then(() => {
-        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore.value})
+        axios.post('user/addScoreChild',{id:currentAnswer.value.writer.id,score:currentScore.value}).then(resp=>{
+          const data = resp.data
+          if(data.success){
+            ElMessage({
+              message:'分数添加成功',
+              type:'success'
+            })
+          }else{
+            ElMessage({
+              message:'分数添加失败',
+              type:'error'
+            })
+          }
+        })
+        axios.post('answer/evaluateAnswer',{id:currentAnswer.value.id,score:currentScore.value,comments:currentComment.value})
             .then(resp => {
               const data = resp.data
               if (data) {
                 if (data.success) {
                   ElMessage({
                     message: resp.data.message,
-                    type: 'success',
+                    type: '审批提交成功',
                   })
-                  handleCloseDrawer()
-                  location.reload()
                 } else {
                   ElMessage({
                     message: resp.data.message,
-                    type: 'error',
+                    type: '审批提交失败',
                   })
                 }
               }
             })
+        handleCloseDrawer()
+        location.reload()
       }).catch(() => {
     // catch error
   })
@@ -212,7 +209,7 @@ function completeAnswerList(){
 
     axios.post('user/getChildByAnswer',answer).then(resp=>{
       if(resp){
-        answer.writer = resp.data.content[0].name
+        answer.writer = resp.data.content[0]
       }else{
         ElMessage({
           message:'获取用户失败',

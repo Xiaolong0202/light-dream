@@ -2,7 +2,6 @@ package com.dream.backend.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.exception.BusinessException;
 import com.dream.backend.resp.PageResp;
@@ -137,6 +136,11 @@ public class UserServiceImpl implements UserService{
     public int modifyUser(User user){
           int result = userMapper.updateUserSelective(user);
           return  result;
+    }
+
+    @Override
+    public int addScore(User user) {
+        return userMapper.addScore(user);
     }
 }
 
