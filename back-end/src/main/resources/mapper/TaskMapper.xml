@@ -7,23 +7,30 @@
     <resultMap id="BaseResultMap" type="com.dream.backend.domain.Task">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="volunteerId" column="volunteer_id" jdbcType="BIGINT"/>
+            <result property="adminId" column="admin_id" jdbcType="BIGINT"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="totalScore" column="total_score" jdbcType="INTEGER"/>
-            <result property="deadline" column="deadline" jdbcType="TIMESTAMP"/>
+            <result property="difficulty" column="difficulty" jdbcType="VARCHAR"/>
+            <result property="priority" column="priority" jdbcType="VARCHAR"/>
+            <result property="budget" column="budget" jdbcType="INTEGER"/>
+            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+            <result property="submitForm" column="submit_form" jdbcType="TINYINT"/>
             <result property="type" column="type" jdbcType="TINYINT"/>
             <result property="isdelete" column="isdelete" jdbcType="TINYINT"/>
     </resultMap>
 
     <select id="queryTaskList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Task">
-        SELECT id,name,volunteer_id as "volunteerId",description,total_score as "totalScore",deadline,type,isdelete
+        SELECT id,name,admin_id as "adminId",description,total_score as "totalScore",difficulty,priority,
+               budget,start_time as "startTime",end_time as "endTime",submit_form as "submitForm",
+               type,isdelete
         FROM task
         WHERE 1 = 1
         <if test="id != null">
             AND id = #{id,jdbcType=BIGINT}
         </if>
-        <if test="volunteerId != null">
-            AND volunteer_id = #{volunteerId,jdbcType=BIGINT}
+        <if test="adminId != null">
+            AND admin_id = #{adminId,jdbcType=BIGINT}
         </if>
         <if test="isdelete != null">
             AND isdelete = #{isdelete,jdbcType=TINYINT}
@@ -31,9 +38,12 @@
     </select>
 
     <insert id="insert" parameterType="com.dream.backend.domain.Task">
-        insert into task (id, name, volunteer_id,description, total_score, deadline, type, isdelete)
-        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{volunteerId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
-                #{totalScore,jdbcType=INTEGER}, #{deadline,jdbcType=TIMESTAMP},#{type,jdbcType=TINYINT},#{isdelete,jdbcType=TINYINT})
+        insert into task (id, name, admin_id, description, total_score, difficulty, priority, budget,
+                          start_time, end_time, submit_form, type, isdelete)
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{adminId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR},
+                #{totalScore,jdbcType=INTEGER}, #{difficulty,jdbcType=VARCHAR}, #{priority,jdbcType=VARCHAR},
+                #{budget,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+                #{submitForm,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, #{isdelete,jdbcType=TINYINT})
     </insert>
 
     <update id="deleteTaskById" parameterType="com.dream.backend.domain.Task">
@@ -45,8 +55,8 @@
     </update>
 
     <sql id="Base_Column_List">
-        id,name,volunteer_id,description,
-        total_score,deadline,type,isdelete
+        id,name,admin_id,description,total_score,difficulty,priority,budget,start_time,end_time,
+        submit_form,type,isdelete
     </sql>
 
 </mapper>
