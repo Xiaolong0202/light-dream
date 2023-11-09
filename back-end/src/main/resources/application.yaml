@@ -6,7 +6,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
 
 server:
-  port: 91
+  port: 81
 
 mybatis-plus:
   #  typeAliasesPackage: pers.lxl.myonlineclass.model.entity

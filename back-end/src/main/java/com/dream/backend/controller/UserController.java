@@ -11,7 +11,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author LiuXiaolong
@@ -116,6 +118,28 @@ public class UserController {
         return commonResp;
     }
 
+    @RequestMapping(value = "/queryUser", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<User>> queryUser(@RequestBody User user){
+        System.out.println(user.toString());
+        CommonResp<List<User>> commonResp = new CommonResp<List<User>>();
+        try{
+            List<User> hasUser = userService.queryUserList(user);
+            if (CollectionUtils.isEmpty(hasUser)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasUser);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
+
     @RequestMapping(value = "/modifyUser", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<Integer> modifyUser(@RequestBody User user){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
@@ -159,6 +183,33 @@ public class UserController {
         }
         return commonResp;
     }
+
+    @RequestMapping(value = "/bindVolunteerAndChild", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<?> bindVolunteerAndChild(@RequestBody Map<String, Object> data){
+        Long volunteer = Long.parseLong((String) data.get("id"));
+        String userList = data.get("users").toString();
+        String[] userPhones = userList.split(",");
+        for(String userPhone:userPhones){
+            userService.bindChild(volunteer,userPhone);
+        }
+        return CommonResp.buildSuccess("绑定成功");
+    }
+
+    @RequestMapping(value = "/addScoreChild", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<?> addScoreChild(@RequestBody User user){
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+        int result =  userService.addScore(user);
+        commonResp.setContent(result);
+        if(result!=0){
+            commonResp.setSuccess(true);
+            commonResp.setMessage("失败");
+        }else{
+            commonResp.setSuccess(false);
+            commonResp.setMessage("成功");
+        }
+        return commonResp;
+    }
+
 
 
 }

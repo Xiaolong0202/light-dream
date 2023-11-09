@@ -17,7 +17,7 @@
                         </el-icon>
                         <router-link
                                 :to="{
-                                 path:'/admin/manageTask',
+                                 path:'/admin/ManageTask',
                                  query: {
                                      phone: user.phone
                                 }
@@ -25,6 +25,36 @@
                             任务管理
                         </router-link>
                     </el-menu-item>
+                  <el-menu-item index="3">
+                    <el-icon>
+                      <Files/>
+                    </el-icon>
+                  <router-link
+                      :to="{
+                                 path:'/admin/ManageUser',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                    用户管理
+                  </router-link>
+                  </el-menu-item>
+
+                  <el-menu-item index="4">
+                    <el-icon>
+                      <Files/>
+                    </el-icon>
+                    <router-link
+                        :to="{
+                                 path:'/admin/ManageVolunteer',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                      志愿者管理
+                    </router-link>
+                  </el-menu-item>
+
                 </el-menu>
             </el-col>
             <el-col :span="22">

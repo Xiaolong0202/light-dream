@@ -27,6 +27,13 @@ public class TaskServiceImpl implements TaskService{
     }
 
     public int addTask(Task task) {
+        if(task.getDifficulty().equals("1")){
+            task.setDifficulty("简单");
+        }else if(task.getDifficulty().equals("2")){
+            task.setDifficulty("普通");
+        }else if(task.getDifficulty().equals("3")){
+            task.setDifficulty("困难");
+        }
         task.setId(IdUtil.getSnowflakeNextId());
         task.setIsdelete(0);
         int taskResult = taskMapper.insert(task);

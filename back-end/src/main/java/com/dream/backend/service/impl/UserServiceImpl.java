@@ -2,7 +2,6 @@ package com.dream.backend.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.exception.BusinessException;
 import com.dream.backend.resp.PageResp;
@@ -82,6 +81,18 @@ public class UserServiceImpl implements UserService{
         userLambdaQueryWrapper.eq(User::getUserType,1);//必须为孩子类型
         PageHelper.startPage(currentPage,pageSize);//分页
         List<User> userList = userMapper.selectList(userLambdaQueryWrapper);
+
+        for(User user:userList){
+            if(user.getVolunteerId()==null){
+                user.setPassword("无");
+            }else{
+                User volun = new User();
+                volun.setId(user.getVolunteerId());
+                List<User> volunteer = userMapper.queryUserList(volun);
+                user.setPassword(volunteer.get(0).getName());
+            }
+        }
+
         PageInfo<User> userPageInfo = new PageInfo<>(userList);//构建分页PageInfo
         log.info("总页数 " + userPageInfo.getPages());
         log.info("总行数 " + userPageInfo.getTotal());
@@ -125,6 +136,11 @@ public class UserServiceImpl implements UserService{
     public int modifyUser(User user){
           int result = userMapper.updateUserSelective(user);
           return  result;
+    }
+
+    @Override
+    public int addScore(User user) {
+        return userMapper.addScore(user);
     }
 }
 

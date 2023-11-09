@@ -10,6 +10,8 @@ import ScoreMall from "@/views/child/ScoreMall.vue";
 import VolunteerChatView from "@/views/volunteer/VolunteerChatView.vue";
 import AdminView from "@/views/AdminView.vue";
 import ManageTask from "@/views/admin/ManageTask.vue";
+import ManageUser from "@/views/admin/ManageUser.vue";
+import ManageVolunteer from "@/views/admin/ManageVolunteer.vue";
 import ChildrenStatics from "@/views/volunteer/ChildrenStatics.vue";
 
 const routes = [
@@ -54,6 +56,14 @@ const routes = [
             {
                 path: 'manageTask',
                 component: ManageTask
+            },
+            {
+                path: 'manageUser',
+                component: ManageUser
+            },
+            {
+                path: 'manageVolunteer',
+                component: ManageVolunteer
             }
         ]
     }

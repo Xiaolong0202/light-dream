@@ -32,10 +32,12 @@ public class TaskController {
     public CommonResp<List<Task>> queryTaskList(@RequestBody User user){
         CommonResp<List<Task>> commonResp = new CommonResp<List<Task>>();
         Task task = new Task();
-        task.setVolunteerId(user.getId());
+        task.setAdminId(user.getId());
         task.setIsdelete(0);
         try{
             List<Task> hasTask = taskService.queryTaskList(task);
+            System.out.println(111);
+            System.out.println(hasTask.toString());
             if (CollectionUtils.isEmpty(hasTask)) {
                 commonResp.setSuccess(false);
                 commonResp.setContent(null);
@@ -55,7 +57,6 @@ public class TaskController {
     @RequestMapping(value = "/addTask", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<Integer> addTask(@RequestBody Task task){
         CommonResp<Integer> commonResp = new CommonResp<Integer>();
-        System.out.print(task);
         try{
             int result = taskService.addTask(task);
             if (result != 0) {
