@@ -2,12 +2,24 @@
     <div style="">
 
         <el-card style="width: 90%;margin-top: 5%;margin-left: 5%">
+            <router-link
+                    :to="{
+                                 path:'/volunteer/childrenStatics',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                查看儿童任务数据统计
+            </router-link>
+            <br>
+            <br>
+            <br>
             <span>负责的儿童</span>
             <el-button style="margin-left: 20px" @click="dialogVisible=true">绑定儿童</el-button>
             <!--        {{children}}-->
-            <el-table style="margin-top: 20px" :data="children"  border>
+            <el-table style="margin-top: 20px" :data="children" border>
                 <el-table-column fixed prop="id" label="儿童ID" width="200"/>
-                <el-table-column  prop="name" label="姓名" width="180"/>
+                <el-table-column prop="name" label="姓名" width="180"/>
                 <el-table-column prop="phone" label="电话号码" width="250"/>
                 <el-table-column prop="score" label="积分数" width="300"/>
                 <el-table-column fixed="right" label="Operations" width="200">
@@ -20,23 +32,23 @@
             </el-table>
             <div style=" display: grid;place-items: center;">
                 <el-pagination
-                    :page-sizes="[10, 20, 30, 40]"
-                    :page-size="pagination.pageSize"
-                    :pager-count="pagination.currentPage"
-                    layout="prev, pager, next"
-                    :total="pagination.total"
+                        :page-sizes="[10, 20, 30, 40]"
+                        :page-size="pagination.pageSize"
+                        :pager-count="pagination.currentPage"
+                        layout="prev, pager, next"
+                        :total="pagination.total"
                 />
             </div>
         </el-card>
 
         <!--对话框-->
         <el-dialog
-            v-model="dialogVisible"
-            title="输入儿童的电话号码"
-            width="30%"
-            :before-close="handleClose"
+                v-model="dialogVisible"
+                title="输入儿童的电话号码"
+                width="30%"
+                :before-close="handleClose"
         >
-            <el-input v-model="bindChildPhone" placeholder="电话号码" />
+            <el-input v-model="bindChildPhone" placeholder="电话号码"/>
             <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -69,11 +81,11 @@ const pagination = reactive({
 const bindChildPhone = ref('')
 
 //窗体关闭的回调函数
-const handleClose = ()=>{
+const handleClose = () => {
     bindChildPhone.value = null
 }
 
-const bindChild = ()=>{
+const bindChild = () => {
     ElMessageBox.confirm(`确认要与电话号码为${bindChildPhone.value}的孩子绑定吗？`)
         .then(() => {
             axios.put(`/user/bindChild?volunteerId=${user.value.id}&childPhone=${bindChildPhone.value}`)
