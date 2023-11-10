@@ -12,6 +12,7 @@ import AdminView from "@/views/AdminView.vue";
 import ManageTask from "@/views/admin/ManageTask.vue";
 import ManageUser from "@/views/admin/ManageUser.vue";
 import ManageVolunteer from "@/views/admin/ManageVolunteer.vue";
+import ChildrenStatics from "@/views/volunteer/ChildrenStatics.vue";
 
 const routes = [
     {
@@ -43,6 +44,9 @@ const routes = [
             },{
                 path: 'volunteerChat',
                 component: VolunteerChatView
+            },{
+                path: 'childrenStatics',
+                component: ChildrenStatics
             }
         ]
     },{
