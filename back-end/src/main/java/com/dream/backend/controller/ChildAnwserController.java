@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @RestController
 public class ChildAnwserController {
 
-
     @Autowired
     AnswerMapper answerMapper;
 

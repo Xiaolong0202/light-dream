@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.backend.mapper.OptionMapper">
+
+  <select id="getOptionList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Option">
+    SELECT id,option_content as "optionContent",question_id as "questionId",task_id as "taskId"
+    FROM options
+      WHERE task_id = #{taskId,jdbcType=BIGINT}
+          AND question_id = #{questionId,jdbcType=INTEGER}
+      order by id
+  </select>
+
+    <select id="getOptionByPrimaryKey" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Option">
+        SELECT id,option_content as "optionContent",question_id as "questionId",task_id as "taskId"
+        FROM options
+        WHERE task_id = #{taskId,jdbcType=BIGINT}
+          AND question_id = #{questionId,jdbcType=INTEGER}
+          AND id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insert" parameterType="com.dream.backend.domain.Option">
+        insert into options (id, option_content, question_id, task_id)
+        values (#{id,jdbcType=INTEGER}, #{optionContent,jdbcType=VARCHAR},
+                #{questionId,jdbcType=INTEGER},#{taskId,jdbcType=BIGINT})
+    </insert>
+
+</mapper>

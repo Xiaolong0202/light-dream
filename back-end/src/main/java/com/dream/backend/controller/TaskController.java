@@ -1,22 +1,29 @@
 package com.dream.backend.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dream.backend.domain.Answer;
+import com.dream.backend.domain.Question;
 import com.dream.backend.domain.Task;
 import com.dream.backend.domain.User;
 import com.dream.backend.resp.CommonResp;
-import com.dream.backend.service.TaskService;
 import com.dream.backend.service.impl.AnswerServiceImpl;
+import com.dream.backend.service.impl.OptionServiceImpl;
+import com.dream.backend.service.impl.QuestionServiceImpl;
 import com.dream.backend.service.impl.TaskServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.dream.backend.enums.problem;
+import com.dream.backend.enums.option;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RequestMapping("/task")
 @RestController
@@ -36,8 +43,6 @@ public class TaskController {
         task.setIsdelete(0);
         try{
             List<Task> hasTask = taskService.queryTaskList(task);
-            System.out.println(111);
-            System.out.println(hasTask.toString());
             if (CollectionUtils.isEmpty(hasTask)) {
                 commonResp.setSuccess(false);
                 commonResp.setContent(null);
@@ -167,6 +172,49 @@ public class TaskController {
         return commonResp;
     }
 
+    @RequestMapping(value = "/addQuestionnaireTask", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<Integer> addQuestionnaireTask(@RequestBody Map<String,Object> data){
+        Object object = data.get("task");
+        String jsonObject = JSON.toJSONString(object);
+        Task task = JSONObject.parseObject(jsonObject, Task.class);
+        System.out.println(task.toString());
+        String problems = JSON.toJSONString(data.get("problem"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        CollectionType listType =
+                objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, problem.class);
+        List<problem> problemList = new ArrayList<problem>();
+        try {
+            problemList = objectMapper.readValue(problems, listType);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println(problemList);
+
+        CommonResp<Integer> commonResp = new CommonResp<Integer>();
+        try{
+            int result = taskService.addQuestionnaireTask(task,problemList);
+            if (result != 0) {
+                commonResp.setSuccess(true);
+                commonResp.setContent(1);
+                commonResp.setMessage("添加成功");
+            }else{
+                commonResp.setSuccess(false);
+                commonResp.setContent(0);
+                commonResp.setMessage("添加失败");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+
+    }
 
 
 }
+
+
+
+
+

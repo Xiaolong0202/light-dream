@@ -2,6 +2,8 @@ package com.dream.backend.service;
 
 import com.dream.backend.domain.Task;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dream.backend.enums.problem;
+import com.dream.backend.enums.option;
 
 import java.util.List;
 
@@ -17,5 +19,7 @@ public interface TaskService{
     public int addTask(Task task);
 
     public int deleteTaskById(Task task);
+
+    int addQuestionnaireTask(Task task,List<problem> problems);
 
 }

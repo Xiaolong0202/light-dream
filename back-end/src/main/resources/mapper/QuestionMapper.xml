@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.backend.mapper.QuestionMapper">
+
+  <select id="queryQuestionList" parameterType="java.lang.Integer" resultType="com.dream.backend.domain.Question">
+    SELECT id,title,type,task_id as "taskId"
+    FROM question
+      WHERE task_id = #{taskId,jdbcType=BIGINT}
+      <if test="id != null and id != ''">
+          AND id = #{id,jdbcType=INTEGER}
+      </if>
+      order by id
+  </select>
+
+    <insert id="insertQuestion" parameterType="com.dream.backend.domain.Question">
+        insert into question (id, title, type, task_id)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},
+                #{type,jdbcType=INTEGER},#{taskId,jdbcType=BIGINT})
+    </insert>
+
+
+
+</mapper>
