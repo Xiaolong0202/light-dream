@@ -12,6 +12,8 @@ import AdminView from "@/views/AdminView.vue";
 import ManageTask from "@/views/admin/ManageTask.vue";
 import ManageUser from "@/views/admin/ManageUser.vue";
 import ManageVolunteer from "@/views/admin/ManageVolunteer.vue";
+import ManageChild from "@/views/admin/ManageChild.vue";
+import ManageAnalyze from "@/views/admin/ManageAnalyze.vue";
 import ChildrenStatics from "@/views/volunteer/ChildrenStatics.vue";
 
 const routes = [
@@ -64,6 +66,13 @@ const routes = [
             {
                 path: 'manageVolunteer',
                 component: ManageVolunteer
+            },
+            {
+                path: 'manageChild',
+                component: ManageChild
+            },{
+                path: 'manageAnalyze',
+                component: ManageAnalyze
             }
         ]
     }

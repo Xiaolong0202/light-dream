@@ -1,7 +1,7 @@
 <template>
 
   <div style="padding-left: 5%">
-    <el-card class="box-card" style="width: 90%;margin-top: 5%;margin-left: 5%">
+    <el-card class="box-card" style="width: 79%;margin-top: 5%;margin-left: 5%">
       <div class="clearfix">
         <span>用户列表</span>
 
@@ -15,8 +15,6 @@
           <el-table-column prop="password" label="用户密码" width="200">
           </el-table-column>
           <el-table-column prop="userType" label="用户类型" width="200">
-          </el-table-column>
-          <el-table-column prop="score" label="积分" width="150">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="223">
             <template #default="scope">
@@ -112,7 +110,6 @@ const bindSend=()=>{
                 type: 'success',
               })
               dialogVisible.value = false
-              location.reload()
             } else {
               ElMessage({
                 message: '绑定失败：' + resp.data.message,

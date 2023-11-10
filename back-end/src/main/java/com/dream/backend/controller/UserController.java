@@ -120,7 +120,6 @@ public class UserController {
 
     @RequestMapping(value = "/queryUser", method = RequestMethod.POST,headers = "Accept=application/json")
     public CommonResp<List<User>> queryUser(@RequestBody User user){
-        System.out.println(user.toString());
         CommonResp<List<User>> commonResp = new CommonResp<List<User>>();
         try{
             List<User> hasUser = userService.queryUserList(user);
@@ -210,6 +209,25 @@ public class UserController {
         return commonResp;
     }
 
-
+    @RequestMapping(value = "/queryAllChildren", method = RequestMethod.POST,headers = "Accept=application/json")
+    public CommonResp<List<User>> queryAllChildren(){
+        CommonResp<List<User>> commonResp = new CommonResp<List<User>>();
+        try{
+            List<User> hasUser = userService.queryAllChildren();
+            if (CollectionUtils.isEmpty(hasUser)) {
+                commonResp.setSuccess(false);
+                commonResp.setContent(null);
+                commonResp.setMessage("失败");
+            }else{
+                commonResp.setSuccess(true);
+                commonResp.setContent(hasUser);
+                commonResp.setMessage("成功");
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return commonResp;
+    }
 
 }

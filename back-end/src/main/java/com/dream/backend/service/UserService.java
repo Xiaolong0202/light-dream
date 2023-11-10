@@ -32,4 +32,6 @@ public interface UserService {
     int modifyUser(User user);
 
     int addScore(User user);
+
+    List<User> queryAllChildren();
 }

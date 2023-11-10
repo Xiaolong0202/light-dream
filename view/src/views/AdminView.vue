@@ -55,6 +55,36 @@
                     </router-link>
                   </el-menu-item>
 
+                  <el-menu-item index="5">
+                    <el-icon>
+                      <Files/>
+                    </el-icon>
+                    <router-link
+                        :to="{
+                                 path:'/admin/ManageChild',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                      儿童管理
+                    </router-link>
+                  </el-menu-item>
+
+                  <el-menu-item index="6">
+                    <el-icon>
+                      <Files/>
+                    </el-icon>
+                    <router-link
+                        :to="{
+                                 path:'/admin/ManageAnalyze',
+                                 query: {
+                                     phone: user.phone
+                                }
+                            }">
+                      分析统计
+                    </router-link>
+                  </el-menu-item>
+
                 </el-menu>
             </el-col>
             <el-col :span="22">

@@ -1,4 +1,5 @@
 <template>
+
   <div style="padding-left: 5%">
     <el-card class="box-card" style="width: 79%;margin-top: 5%;margin-left: 5%">
       <div class="clearfix">
@@ -11,13 +12,14 @@
           </el-table-column>
           <el-table-column prop="phone" label="用户账号" width="200">
           </el-table-column>
-          <el-table-column prop="password" label="用户密码" width="200">
+          <el-table-column prop="volunteerName" label="所属志愿者" width="200">
           </el-table-column>
-          <el-table-column prop="userType" label="用户类型" width="200">
+          <el-table-column prop="score" label="积分" width="200">
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="223">
             <template #default="scope">
-              <el-button @click="modify(scope.row)" type="info" size="small">查看/修改</el-button>
+              <el-button @click="modify(scope.row)" type="info" size="small">修改积分</el-button>
+              <el-button @click="unbind(scope.row)" type="info" size="small">解绑</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -27,7 +29,7 @@
 
   <el-dialog
       v-model="checkboxVisible"
-      title="用户信息"
+      title="儿童信息"
       width="30%"
       @close="closeDialog">
 
@@ -35,11 +37,8 @@
       <el-form-item label="姓名">
         <el-input v-model="userToModify.name"/>
       </el-form-item>
-      <el-form-item label="账号">
-        <el-input v-model="userToModify.phone"/>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input show-password v-model="userToModify.password"/>
+      <el-form-item label="积分">
+        <el-input v-model="userToModify.score"/>
       </el-form-item>
     </el-form>
 
@@ -50,7 +49,17 @@
     </div>
   </el-dialog>
 
-
+  <el-dialog
+      title="确认"
+      v-model="unbindVisible"
+      width="30%"
+      :before-close="handleClose">
+    <span>确定要将该儿童与其志愿者解绑吗</span>
+    <template v-slot:footer>
+      <el-button type="primary" @click="unbindSend">确定</el-button>
+      <el-button @click="unbindVisible = false">取消</el-button>
+    </template>
+  </el-dialog>
 
 </template>
 
@@ -61,7 +70,9 @@ import axios from "axios";
 
 const tableData = ref([])
 const userToModify = ref([])
+const userToUnbind = ref([])
 const checkboxVisible = ref(false)
+const unbindVisible = ref(false)
 const disEditable = ref(true)
 
 /*对应修改填写框*/
@@ -72,6 +83,43 @@ const modify = (userModify) => {
 const modifyConsent=()=>{
   disEditable.value = false
 }
+
+const unbind = (UnbindUser) => {
+  unbindVisible.value = true
+  userToUnbind.value = UnbindUser
+}
+const unbindSend=()=>{
+
+  if(userToUnbind.value.userType == "儿童"){
+    userToUnbind.value.userType = 1
+  }else if(userToUnbind.value.userType == "志愿者"){
+    userToUnbind.value.userType = 2
+  }else{
+    userToUnbind.value.userType = 3
+  }
+
+  userToUnbind.value.volunteerId = 0
+
+  axios.post('user/modifyUser',userToUnbind.value).then(resp=>{
+    if(resp){
+      if(resp.data.success){
+        userToUnbind.value = ref({})
+        unbindVisible.value = false
+        ElMessage({
+          message: '解绑成功：' + resp.data.message,
+        })
+        location.reload()
+      }else{
+        ElMessage({
+          message: '解绑失败：' + resp.data.message,
+          type: 'error',
+        })
+      }
+    }
+  })
+
+}
+
 const modifySend=()=>{
   if(userToModify.value.userType == "儿童"){
     userToModify.value.userType = 1
@@ -104,40 +152,34 @@ const modifySend=()=>{
 /*
 * 加载*/
 onMounted(() => {
-  axios.post('/user/queryAllUser').then(resp => {
-    console.log(resp)
-    if (resp) {
-      if (resp.data.success) {
-
-        let users = resp.data.content;
-
-        for (var i = 0; i < users.length; i++) {
-          let userType = ''
-
-          if (users[i].userType == 1) {
-            userType = '儿童'
-          } else if(users[i].userType == 2){
-            userType = '志愿者'
-          } else{
-            userType = '管理者'
+  axios.post('/user/queryAllChildren')
+      .then(resp => {
+        const data = resp.data
+        if (data) {
+          if (data.success) {
+            let users = resp.data.content;
+            for (var i = 0; i < users.length; i++) {
+              let temp = {
+                id:users[i].id,
+                name:users[i].name,
+                phone: users[i].phone,
+                volunteerName: users[i].password,
+                score:users[i].score,
+                volunteerId:users[i].volunteerId
+              }
+              tableData.value.push(temp)
+            }
+          } else {
+            ElMessage({
+              message: '获取儿童信息失败：' + resp.data.message,
+              type: 'error',
+            })
           }
-
-          let temp = {
-            id:users[i].id,
-            name:users[i].name,
-            phone: users[i].phone,
-            password: users[i].password,
-            userType: userType,
-            score:users[i].score,
-            volunteerId:users[i].volunteerId
-          }
-          tableData.value.push(temp)
         }
-      }
-    }
-  })
+      })
 
 })
+
 
 /*
 * 解决ERROR ResizeObserver loop completed with undelivered notifications.
@@ -180,7 +222,6 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
   }
 
 }
-
 
 </script>
 

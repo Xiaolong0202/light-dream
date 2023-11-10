@@ -288,8 +288,8 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="164">
             <template #default="scope">
-              <el-button @click="release(scope.row)" type="text" size="small">发布</el-button>
-              <el-button @click="remove(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="release(scope.row)" type="primary" size="small">发布</el-button>
+              <el-button @click="remove(scope.row)" type="primary" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -333,7 +333,6 @@
     <div>
       <el-link type="primary" @click="onAddQuestion(1)" style="margin-left: 10px;margin-bottom: 10px">添加单选</el-link>
       <el-link type="primary" @click="onAddQuestion(2)" style="margin-left: 10px;margin-bottom: 10px">添加多选</el-link>
-      <el-link type="primary" @click="onAddQuestion(3)" style="margin-left: 10px;margin-bottom: 10px">添加填空</el-link>
       <el-button type="primary" @click="submitQuestion" style="margin-left: 1100px;margin-top: 0px">保存问题</el-button>
     </div>
     <div id="problem">

@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -89,7 +90,11 @@ public class UserServiceImpl implements UserService{
                 User volun = new User();
                 volun.setId(user.getVolunteerId());
                 List<User> volunteer = userMapper.queryUserList(volun);
-                user.setPassword(volunteer.get(0).getName());
+                if(CollectionUtils.isEmpty(volunteer)){
+                    user.setPassword("无");
+                }else{
+                    user.setPassword(volunteer.get(0).getName());
+                }
             }
         }
 
@@ -142,6 +147,29 @@ public class UserServiceImpl implements UserService{
     public int addScore(User user) {
         return userMapper.addScore(user);
     }
+
+    @Override
+    public List<User> queryAllChildren(){
+        User u = new User();
+        u.setUserType(1);
+        List<User> userList = userMapper.queryUserList(u);
+        for(User user:userList){
+            if(user.getVolunteerId()==null){
+                user.setPassword("无");
+            }else{
+                User volun = new User();
+                volun.setId(user.getVolunteerId());
+                List<User> volunteer = userMapper.queryUserList(volun);
+                if(CollectionUtils.isEmpty(volunteer)){
+                    user.setPassword("无");
+                }else{
+                    user.setPassword(volunteer.get(0).getName());
+                }
+            }
+        }
+        return userList;
+    }
+
 }
 
 
